@@ -12,7 +12,6 @@ import { salvarUsuarioNaApi, } from '../actions'
 import { 
 	EMPRESA_ADMINISTRACAO_ID,
 	USUARIO_TIPO_ADMINISTRACAO,
-	USUARIO_TIPO_ACEITAR_LANCAMENTO,
 } from '../helpers/constantes'
 import { Cabecalho } from './Cabecalho';
 

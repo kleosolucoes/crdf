@@ -8,8 +8,6 @@ import {
 	Button,
 } from "reactstrap";
 import { 
-	STRING_DEBITO,
-	STRING_CREDITO,
 	DARKGREEN,
 	LIGHTGRAY,
 } from '../helpers/constantes'
@@ -55,8 +53,6 @@ class CabecalhoExtrato extends React.Component {
 		} = this.props
 		let {
 			saldo,
-			naoRecebidoDebito,
-			naoRecebidoCredito,
 		} = this.props
 	
 		let corSaldo = DARKGREEN
@@ -64,8 +60,6 @@ class CabecalhoExtrato extends React.Component {
 			corSaldo = 'brown'
 		}
 		saldo = Number(saldo).toFixed(2)
-		naoRecebidoDebito = Number(naoRecebidoDebito).toFixed(2)
-		naoRecebidoCredito = Number(naoRecebidoCredito).toFixed(2)
 		return (
 			<div style={{background: LIGHTGRAY}}>
 				<Row style={{justifyContent: 'center', margin: 0}}>

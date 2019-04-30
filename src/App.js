@@ -4,7 +4,6 @@ import Lancamentos from './components/Lancamentos'
 import Empresas from './components/Empresas'
 import ExtratoAdministracao from './components/ExtratoAdministracao'
 import Categorias from './components/Categorias'
-import ExtratoEmpresa from './components/ExtratoEmpresa'
 import LancarVarios from './components/LancarVarios'
 import LancarUm from './components/LancarUm'
 import Usuarios from './components/Usuarios'
@@ -100,7 +99,8 @@ class App extends React.Component {
 					}
 					{
 						tela === TELA_EXTRATO_EMPRESA &&
-							<ExtratoEmpresa 
+							<ExtratoAdministracao 
+								alterarTela={this.alterarTela}
 								puxarTodosDados={this.puxarTodosDados}
 								askForPermissioToReceiveNotifications={this.askForPermissioToReceiveNotifications}
 							/>

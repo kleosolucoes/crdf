@@ -11,6 +11,7 @@ import {
 	DARKGREEN,
 	LIGHTGREEN,
 	LIGHTGRAY,
+	EMPRESA_ADMINISTRACAO_ID,
 } from '../helpers/constantes'
 import './aux.css';
 // ICONS
@@ -53,8 +54,6 @@ class ExtratoAdministracao extends React.Component {
 	render() {
 		const { 
 			saldo,
-			naoRecebidoCredito,
-			naoRecebidoDebito,
 			listaDeNaoRecebidoPorCategoria,
 		} = this.props
 		const {
@@ -74,8 +73,6 @@ class ExtratoAdministracao extends React.Component {
 						<CabecalhoExtrato 
 							onClick={() => this.atualizar()}
 							saldo= {saldo}
-							naoRecebidoCredito={naoRecebidoCredito}
-							naoRecebidoDebito={naoRecebidoDebito}
 						/>
 					}
 				</div>	
@@ -134,67 +131,70 @@ class ExtratoAdministracao extends React.Component {
 	}
 }
 
-const mapStateToProps = state => {
+const mapStateToProps = ({usuarioLogado, lancamentos, categorias}) => {
 	let token = null
-	if(state.usuarioLogado){
-		token = state.usuarioLogado.token
+	if(usuarioLogado){
+		token = usuarioLogado.token
 	}
 	let saldo = 0.00
-	let naoRecebidoCredito = 0.00
-	let naoRecebidoDebito = 0.00
 	let listaDeNaoRecebidoPorCategoria = []
 		if(
-			state.categorias 
-			&& state.lancamentos
+			categorias 
+			&& lancamentos
 		){
-			listaDeNaoRecebidoPorCategoria = state.categorias.map(categoria=> {
+			listaDeNaoRecebidoPorCategoria = categorias.map(categoria=> {
 				categoria.soma = 0.00
 				return categoria
 			})
-			state.lancamentos
+			let lancamentosFiltrados = lancamentos
+			if(usuarioLogado.empresa_id !== EMPRESA_ADMINISTRACAO_ID){
+				lancamentosFiltrados = lancamentos && usuarioLogado && 
+					lancamentos.filter(lancamento => lancamento.empresa_id === usuarioLogado.empresa_id)
+			}
+			lancamentosFiltrados
 				.filter(lancamento => lancamento.data_inativacao === null)
 				.forEach(lancamento => {
-					const categoriaAtiva = state.categorias
+					const categoriaAtiva = categorias
 						.find(categoria => lancamento.categoria_id === categoria._id.toString())
 
-					if(lancamento.recebido){
-						let valorFormatado = parseFloat(lancamento.recebido.toFixed(2))
-						if(categoriaAtiva.credito_debito === 'C'){
-							saldo += valorFormatado
-						}else{
-							saldo -= valorFormatado
+					if(categoriaAtiva){
+						if(lancamento.recebido){
+							let valorFormatado = parseFloat(lancamento.recebido.toFixed(2))
+							if(categoriaAtiva.credito_debito === 'C'){
+								saldo += valorFormatado
+							}else{
+								saldo -= valorFormatado
+							}
+							saldo = parseFloat(saldo.toFixed(2))
 						}
-						saldo = parseFloat(saldo.toFixed(2))
-					}
-					if(!lancamento.recebido){
-						listaDeNaoRecebidoPorCategoria = 
-							listaDeNaoRecebidoPorCategoria
-							.map(categoria => {
-								if(categoria._id === categoriaAtiva._id){
-									if(lancamento.dizimo){
-										let valorFormatado = parseFloat(lancamento.dizimo.toFixed(2))
-										categoria.soma += valorFormatado
-										categoria.soma = parseFloat(categoria.soma.toFixed(2))
+						if(!lancamento.recebido){
+							listaDeNaoRecebidoPorCategoria = 
+								listaDeNaoRecebidoPorCategoria
+								.map(categoria => {
+									if(categoria._id === categoriaAtiva._id){
+										if(lancamento.dizimo){
+											let valorFormatado = parseFloat(lancamento.dizimo.toFixed(2))
+											categoria.soma += valorFormatado
+											categoria.soma = parseFloat(categoria.soma.toFixed(2))
+										}
+										if(lancamento.oferta){
+											let valorFormatado = parseFloat(lancamento.oferta.toFixed(2))
+											categoria.soma += valorFormatado
+											categoria.soma = parseFloat(categoria.soma.toFixed(2))
+										}
 									}
-									if(lancamento.oferta){
-										let valorFormatado = parseFloat(lancamento.oferta.toFixed(2))
-										categoria.soma += valorFormatado
-										categoria.soma = parseFloat(categoria.soma.toFixed(2))
-									}
-								}
-								return categoria
-							})
+									return categoria
+								})
+						}
 					}
 				})
 		}
 
 	return {
 		saldo,
-		naoRecebidoCredito,
-		naoRecebidoDebito,
 		listaDeNaoRecebidoPorCategoria,
-		categorias: state.categorias,
-		lancamentos: state.lancamentos,
+		categorias,
+		lancamentos,
 		token,
 	}
 }

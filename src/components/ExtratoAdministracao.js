@@ -8,8 +8,6 @@ import {
 } from 'reactstrap'
 import { connect } from 'react-redux'
 import { 
-	SITUACAO_RECEBIDO, 
-	SITUACAO_NAO_RECEBIDO,
 	DARKGREEN,
 	LIGHTGREEN,
 	LIGHTGRAY,

@@ -174,13 +174,11 @@ class UsuarioSalvar extends React.Component {
 							usuarioTipo &&
 								usuarioTipo.map(usuarioTipo => {
 									let mostrar = false
-									if(this.props.empresa_id === EMPRESA_ADMINISTRACAO_ID
-										&& (usuarioTipo._id === USUARIO_TIPO_ADMINISTRACAO || usuarioTipo._id === USUARIO_TIPO_ACEITAR_LANCAMENTO)){
+									if(this.props.empresa_id === EMPRESA_ADMINISTRACAO_ID){
 										mostrar = true
 									}
 									if(this.props.empresa_id !== EMPRESA_ADMINISTRACAO_ID
-										&& usuarioTipo._id !== USUARIO_TIPO_ADMINISTRACAO
-										&& usuarioTipo._id !== USUARIO_TIPO_ACEITAR_LANCAMENTO){
+										&& usuarioTipo._id !== USUARIO_TIPO_ADMINISTRACAO){
 										mostrar = true
 									}
 									if(mostrar){

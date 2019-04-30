@@ -1,22 +1,12 @@
 import React from 'react'
 import {
 	Button,
-	Card,
-	CardBody,
-	CardTitle,
-	Col,
 	Badge,
 } from 'reactstrap'
 import { connect } from 'react-redux'
 import { 
 	EMPRESA_ADMINISTRACAO_ID,
-	STRING_DEBITO,
-	STRING_CREDITO,
-	SITUACAO_NAO_RECEBIDO,
-	SITUACAO_RECEBIDO,
-	LIGHTGRAY,
 } from '../helpers/constantes'
-import LancamentoSituacao from './LancamentoSituacao'
 import { removerLancamentoNaApi } from '../actions'
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'

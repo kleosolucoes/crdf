@@ -1,11 +1,7 @@
 import * as api from '../helpers/api'
 
-export const PEGAR_SITUACOES = 'PEGAR_SITUACOES'
-
 export const PEGAR_LANCAMENTOS = 'PEGAR_LANCAMENTOS'
 export const SALVAR_LANCAMENTO = 'SALVAR_LANCAMENTO'
-export const PEGAR_LANCAMENTO_SITUACAO = 'PEGAR_LANCAMENTO_SITUACAO'
-export const SALVAR_LANCAMENTO_SITUACAO = 'SALVAR_LANCAMENTO_SITUACAO'
 
 export const PEGAR_USUARIOS = 'PEGAR_USUARIOS'
 export const SALVAR_USUARIO = 'SALVAR_USUARIO'
@@ -13,7 +9,6 @@ export const PEGAR_USUARIO_TIPO = 'PEGAR_USUARIO_TIPO'
 
 export const PEGAR_CATEGORIAS = 'PEGAR_CATEGORIAS'
 export const SALVAR_CATEGORIA = 'SALVAR_CATEGORIA'
-export const PEGAR_CATEGORIA_TIPO = 'PEGAR_CATEGORIA_TIPO'
 
 export const PEGAR_EMPRESAS = 'PEGAR_EMPRESAS'
 export const SALVAR_EMPRESA = 'SALVAR_EMPRESA'
@@ -54,13 +49,6 @@ export function salvarCategoria(elemento, novo = false){
 	}
 }
 
-export function pegarCategoriaTipo(elementos){ 
-	return {
-		type: PEGAR_CATEGORIA_TIPO,
-		elementos,
-	}
-}
-
 export function pegarEmpresas(elementos){ 
 	return {
 		type: PEGAR_EMPRESAS,
@@ -88,28 +76,6 @@ export function salvarUsuario(elemento, novo = false){
 		type: SALVAR_USUARIO,
 		elemento,
 		novo,
-	}
-}
-
-export function pegarLancamentoSituacao(elementos){ 
-	return {
-		type: PEGAR_LANCAMENTO_SITUACAO,
-		elementos,
-	}
-}
-
-export function salvarLancamentoSituacao(elemento, novo = false){ 
-	return {
-		type: SALVAR_LANCAMENTO_SITUACAO,
-		elemento,
-		novo,
-	}
-}
-
-export function pegarSituacoes(elementos){ 
-	return {
-		type: PEGAR_SITUACOES,
-		elementos,
 	}
 }
 
@@ -169,13 +135,6 @@ export const pegarUsuarioTipoDaApi = (token) => dispatch => {
 		})
 }
 
-export const pegarSituacaoDaApi = (token) => dispatch => {
-	api.situacao(token)
-		.then(dados => {
-			return dispatch(pegarSituacoes(dados.resultado.elementos))
-		})
-}
-
 export const pegarEmpresaDaApi = (token) => dispatch => {
 	api.empresas(token)
 		.then(dados => {
@@ -197,13 +156,6 @@ export const pegarCategoriaDaApi = (token) => dispatch => {
 		})
 }
 
-export const pegarCategoriaTipoDaApi = (token) => dispatch => {
-	api.categoriaTipo(token)
-		.then(dados => {
-			return dispatch(pegarCategoriaTipo(dados.resultado.elementos))
-		})
-}
-
 export const pegarContaFixaDaApi = (token) => dispatch => {
 	api.contaFixa(token)
 		.then(dados => {
@@ -212,16 +164,9 @@ export const pegarContaFixaDaApi = (token) => dispatch => {
 }
 
 export const pegarLancamentoDaApi = (token) => dispatch => {
-	api.lancamento(token)
+	return api.lancamento(token)
 		.then(dados => {
 			return dispatch(pegarLancamentos(dados.resultado.elementos))
-		})
-}
-
-export const pegarLancamentoSituacaoDaApi = (token) => dispatch => {
-	return api.lancamentoSituacao(token)
-		.then(dados => {
-			return dispatch(pegarLancamentoSituacao(dados.resultado.elementos))
 		})
 }
 
@@ -230,7 +175,6 @@ export const lancarUmNaApi = (dados, token) => dispatch => {
 		.then(dados => {
 			const novoRegistro = true
 			dispatch(salvarLancamento(dados.resultado.lancamento, novoRegistro))
-			dispatch(salvarLancamentoSituacao(dados.resultado.lancamentoSituacao, novoRegistro))
 		})
 }
 
@@ -238,11 +182,7 @@ export const alterarLancamentoNaApi = (dados, token) => dispatch => {
 	return	api.alterarLancamento(dados, token)
 		.then(dados => {
 			dispatch(salvarLancamento(dados.resultado.lancamento))
-			dispatch(salvarLancamentoSituacao(dados.resultado.lancamentoSituacao))
-			const novoRegistro = true
-			dispatch(salvarLancamentoSituacao(dados.resultado.lancamentoSituacaoNovo, novoRegistro))
-
-			return dados.resultado.lancamentoSituacaoNovo._id
+			return dados.resultado.lancamento
 		})
 }
 
@@ -302,6 +242,5 @@ export const removerLancamentoNaApi = (dados, token) => dispatch => {
 	api.removerLancamento(dados, token)
 		.then(dados => {
 			dispatch(salvarLancamento(dados.resultado.lancamento))
-			dispatch(salvarLancamentoSituacao(dados.resultado.lancamentoSituacao))
 		})
 }

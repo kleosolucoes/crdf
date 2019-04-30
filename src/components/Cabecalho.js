@@ -82,7 +82,7 @@ class CabecalhoExtrato extends React.Component {
 
 				<Row style={{justifyContent: 'center', paddingBottom: 8, margin: 0}}>
 
-					<Col sm="12" lg="4">
+					<Col sm="12" lg="12">
 						<Card className="card-saldo">
 							<CardTitle> 
 								<span style={{color: corSaldo}}> R$ {saldo}</span>
@@ -91,19 +91,6 @@ class CabecalhoExtrato extends React.Component {
 						</Card> 
 					</Col>
 
-					<Col sm="12" lg="4">
-						<Card className="card-saldo">
-							<CardTitle style={{color: 'gray'}}>R$ {naoRecebidoCredito}</CardTitle>
-							<CardText style={{fontSize: 12}}>Não Aceitos - {STRING_CREDITO}</CardText>
-						</Card>
-					</Col>
-
-					<Col sm="12" lg="4">
-						<Card className="card-saldo">
-							<CardTitle style={{color: 'brown'}}>R$ {naoRecebidoDebito}</CardTitle>
-							<CardText style={{fontSize: 12}}>Não Aceitos - {STRING_DEBITO}</CardText>
-						</Card>
-					</Col>
 				</Row>
 			</div>	
 		)

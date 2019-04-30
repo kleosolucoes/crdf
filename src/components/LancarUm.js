@@ -31,31 +31,16 @@ class LancarUm extends React.Component {
 		descricao: '',
 		categoria_id: 0,
 		empresa_id: 0,
-		valor: '0.00',
-		taxa: '0.00',
+		recebido: '0.00',
 		mostrarMensagemDeErro: false,
 		camposComErro: [],
-		situacao_id: 0,
-	}
-
-	componentDidMount(){
-		const {
-			lancamento
-		} = this.props
-		if(lancamento){
-			this.setState({
-				descricao: lancamento.descricao,
-				valor: lancamento.valor,
-				taxa: lancamento.taxa,
-			})
-		}
 	}
 
 	ajudadorDeCampo = event => {
 		let valor = event.target.value
 		const name = event.target.name
 
-		if(name === 'valor' || name === 'taxa'){
+		if(name === 'recebido'){
 			const valorInteiro = getMoney(valor) + ''
 			const valorComZerosAEsquerda = valorInteiro.padStart(3, '0')
 			valor = formatReal(valorComZerosAEsquerda)
@@ -67,13 +52,11 @@ class LancarUm extends React.Component {
 		const {
 			categoria_id,
 			empresa_id,
-			valor,
-			taxa,
+			recebido,
 			dia,
 			mes,
 			ano,
 			descricao,
-			situacao_id,
 		} = this.state
 		let {
 			mostrarMensagemDeErro,
@@ -81,7 +64,6 @@ class LancarUm extends React.Component {
 		} = this.state
 		let {
 			lancamento,
-			lancamentoSituacaoAtual,
 		} = this.props
 		camposComErro = []
 
@@ -110,20 +92,9 @@ class LancarUm extends React.Component {
 			}
 		}
 
-		if(lancamento){
-			if(parseInt(situacao_id) === 0){
-				mostrarMensagemDeErro = true
-				camposComErro.push('situacao_id')
-			}
-		}
-
-		if(isNaN(valor) || valor === '' || valor === '0.00'){
+		if(isNaN(recebido) || recebido === '' || recebido === '0.00'){
 			mostrarMensagemDeErro = true
-			camposComErro.push('valor')
-		}
-		if(isNaN(taxa) || taxa === ''){
-			mostrarMensagemDeErro = true
-			camposComErro.push('taxa')
+			camposComErro.push('recebido')
 		}
 
 		if(mostrarMensagemDeErro){
@@ -138,13 +109,10 @@ class LancarUm extends React.Component {
 			})
 
 			let elemento = {}
-			elemento.usuario_id = this.props.usuario_id
+			elemento.quem_recebeu_id = this.props.usuario_id
+			elemento.recebido = recebido
 			if(lancamento){
 				elemento.lancamento_id = lancamento._id
-				elemento.valor = valor
-				elemento.taxa = taxa
-				elemento.situacao_id = situacao_id
-				elemento.lancamento_situacao_id = lancamentoSituacaoAtual._id
 				this.props.alterarLancamentoNaApi(elemento, this.props.token)
 				this.props.alternarMostrarAlterarLancamento(null)
 			}
@@ -159,8 +127,6 @@ class LancarUm extends React.Component {
 				elemento.mes = mes
 				elemento.ano = ano
 				elemento.empresa_id = empresa_id
-				elemento.valor = valor
-				elemento.taxa = taxa
 				this.props.lancarUmNaApi(elemento, this.props.token)
 				this.props.alterarTela('extratoAdministracao')
 			}
@@ -175,7 +141,6 @@ class LancarUm extends React.Component {
 			lancamento,
 			categoria,
 			empresa,
-			situacoes,
 		} = this.props
 		const {
 			mostrarMensagemDeErro,
@@ -184,11 +149,9 @@ class LancarUm extends React.Component {
 			mes,
 			ano,
 			descricao,
-			valor,
-			taxa,
+			recebido,
 			categoria_id,
 			empresa_id,
-			situacao_id,
 		} = this.state
 
 		let arrayDias = []
@@ -246,12 +209,12 @@ class LancarUm extends React.Component {
 								}
 								{
 									lancamento && 
-										empresa &&
-											<p>
-												<Badge style={{padding: 5, background: DARKGREEN}}>
-													{empresa.nome}
-												</Badge>
-											</p>
+									empresa &&
+										<p>
+											<Badge style={{padding: 5, background: DARKGREEN}}>
+												{empresa.nome}
+											</Badge>
+										</p>
 								}
 							</FormGroup>
 						</Col>
@@ -306,33 +269,26 @@ class LancarUm extends React.Component {
 							<Row>
 								<Col>
 									<FormGroup>
-										<Label for="empresa_id">Situação</Label>
-										<div>
-											<Input 
-												type="select" 
-												name="situacao_id" 
-												id="situacao_id" 
-												value={situacao_id} 
-												onChange={this.ajudadorDeCampo}
-												invalid={camposComErro.includes('situacao_id') ? true : null}
-											>
-												<option value='0'>Selecione</option>
+										<Label for="valor">Dízimo</Label>
+										<p>
+											<Badge style={{padding: 5, background: DARKGREEN}}>
 												{
-													situacoes &&
-														situacoes.map(situacao => {
-															return (
-																<option 
-																	key={situacao._id}
-																	value={situacao._id}
-																>
-																	{situacao.nome}
-																</option>
-															)
-														})
+													lancamento.dizimo ? Number(lancamento.dizimo).toFixed(2) : 0.00
 												}
-											</Input>
-											{camposComErro.includes('situacao_id') && <Alert color='danger'>Selecione a Situação</Alert>}
-										</div>
+											</Badge>
+										</p>
+									</FormGroup>
+								</Col>
+								<Col>
+									<FormGroup>
+										<Label for="valor">Oferta</Label>
+										<p>
+											<Badge style={{padding: 5, background: DARKGREEN}}>
+												{
+													lancamento.oferta ? Number(lancamento.oferta).toFixed(2) : 0.00
+												}
+											</Badge>
+										</p>
 									</FormGroup>
 								</Col>
 							</Row>
@@ -340,32 +296,17 @@ class LancarUm extends React.Component {
 					<Row>
 						<Col>
 							<FormGroup>
-								<Label for="valor">Valor</Label>
+								<Label for="recebido">Recebido</Label>
 								<Input 
 									type="number" 
-									name="valor" 
-									id="valor" 
-									value={valor} 
+									name="recebido" 
+									id="recebido" 
+									value={recebido} 
 									onChange={this.ajudadorDeCampo}
-									invalid={camposComErro.includes('valor') ? true : null}
+									invalid={camposComErro.includes('recebido') ? true : null}
 								>
 								</Input>
-								{camposComErro.includes('valor') && <Alert color='danger'>Preencha o Valor</Alert>}
-							</FormGroup>
-						</Col>
-						<Col>
-							<FormGroup>
-								<Label for="taxa">Taxa</Label>
-								<Input 
-									type="number" 
-									name="taxa" 
-									id="taxa" 
-									value={taxa} 
-									onChange={this.ajudadorDeCampo}
-									invalid={camposComErro.includes('taxa') ? true : null}
-								>
-								</Input>
-								{camposComErro.includes('taxa') && <Alert color='danger'>Preencha a Taxa</Alert>}
+								{camposComErro.includes('recebido') && <Alert color='danger'>Preencha o Valor Recebido</Alert>}
 							</FormGroup>
 						</Col>
 					</Row>
@@ -487,11 +428,10 @@ class LancarUm extends React.Component {
 	}
 }
 
-const mapStateToProps = ({situacoes, categorias, empresas, usuarioLogado, lancamentos, lancamentoSituacao,}, {lancamento_id}) => {
+const mapStateToProps = ({categorias, empresas, usuarioLogado, lancamentos,}, {lancamento_id}) => {
 	let lancamentoSelecionado = null
 	let categoriaSelecionada = null
 	let empresaSelecionada = null
-	let lancamentoSituacaoAtual = null
 	if(lancamento_id){
 		lancamentoSelecionado = lancamentos && 
 			lancamentos.find(lancamento => lancamento._id === lancamento_id)
@@ -499,11 +439,6 @@ const mapStateToProps = ({situacoes, categorias, empresas, usuarioLogado, lancam
 			categorias.find(categoria => categoria._id === lancamentoSelecionado.categoria_id)
 		empresaSelecionada = empresas && 
 			empresas.find(empresa => empresa._id === lancamentoSelecionado.empresa_id)
-		lancamentoSituacaoAtual = lancamentoSituacao && 
-			lancamentoSituacao
-			.find(lancamentoSituacao => 
-				lancamentoSituacao.lancamento_id === lancamentoSelecionado._id && 
-				lancamentoSituacao.data_inativacao === null)
 	}
 	return {
 		categorias: categorias,
@@ -513,8 +448,6 @@ const mapStateToProps = ({situacoes, categorias, empresas, usuarioLogado, lancam
 		lancamento: lancamentoSelecionado,
 		categoria: categoriaSelecionada,
 		empresa: empresaSelecionada,
-		lancamentoSituacaoAtual,
-		situacoes,
 	}
 }
 

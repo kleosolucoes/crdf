@@ -50,51 +50,9 @@ export const usuarioTipo = (token) =>
 		.then(resultado => resultado.json())
 		.then(json => json)
 
-export const situacao = (token) =>
-	fetch(
-		`${api}/situacao/todos`,
-		{
-			headers: {
-				...headers, 
-				'x-access-token': token,
-			},
-			method: "GET",
-		}
-	)
-		.then(resultado => resultado.json())
-		.then(json => json)
-
 export const categoria = (token) =>
 	fetch(
 		`${api}/categoria/todos`,
-		{
-			headers: {
-				...headers, 
-				'x-access-token': token,
-			},
-			method: "GET",
-		}
-	)
-		.then(resultado => resultado.json())
-		.then(json => json)
-
-export const categoriaTipo = (token) =>
-	fetch(
-		`${api}/categoria/categoriaTipo`,
-		{
-			headers: {
-				...headers, 
-				'x-access-token': token,
-			},
-			method: "GET",
-		}
-	)
-		.then(resultado => resultado.json())
-		.then(json => json)
-
-export const usuarioSituacao = (token) =>
-	fetch(
-		`${api}/usuario/usuarioSituacao`,
 		{
 			headers: {
 				...headers, 
@@ -151,20 +109,6 @@ export const contaFixa = (token) =>
 export const lancamento = (token) =>
 	fetch(
 		`${api}/empresa/lancamento`,
-		{
-			headers: {
-				...headers, 
-				'x-access-token': token,
-			},
-			method: "GET",
-		}
-	)
-		.then(resultado => resultado.json())
-		.then(json => json)
-
-export const lancamentoSituacao = (token) =>
-	fetch(
-		`${api}/empresa/lancamentoSituacao`,
 		{
 			headers: {
 				...headers, 

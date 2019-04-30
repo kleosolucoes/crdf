@@ -24,14 +24,11 @@ import {
 import { 
 	pegarUsuarioDaApi,
 	pegarUsuarioTipoDaApi,
-	pegarSituacaoDaApi,
 	pegarCategoriaDaApi,
-	pegarCategoriaTipoDaApi,
 	pegarEmpresaDaApi,
 	pegarEmpresaTipoDaApi,
 	pegarContaFixaDaApi,
 	pegarLancamentoDaApi,
-	pegarLancamentoSituacaoDaApi,
 } from './actions'
 //import firebase from 'firebase'
 
@@ -39,13 +36,13 @@ class App extends React.Component {
 
 	state = {
 		tela: 'login',
-		categoria_tipo_id: 0,
+		categoria_id: 0,
 	}
 
-	alterarTela = (tela, categoria_tipo_id = 0) => {
+	alterarTela = (tela, categoria_id = 0) => {
 		this.setState({
 			tela,
-			categoria_tipo_id,
+			categoria_id,
 		})
 	}
 
@@ -61,14 +58,11 @@ class App extends React.Component {
 	puxarTodosDados = () => {
 		this.props.pegarUsuarioDaApi(this.props.token)			
 		this.props.pegarUsuarioTipoDaApi(this.props.token)
-		this.props.pegarSituacaoDaApi(this.props.token)
 		this.props.pegarCategoriaDaApi(this.props.token)
-		this.props.pegarCategoriaTipoDaApi(this.props.token)
 		this.props.pegarEmpresaDaApi(this.props.token)
 		this.props.pegarEmpresaTipoDaApi(this.props.token)
 		this.props.pegarContaFixaDaApi(this.props.token)
-		this.props.pegarLancamentoDaApi(this.props.token)
-		return	this.props.pegarLancamentoSituacaoDaApi(this.props.token)
+		return this.props.pegarLancamentoDaApi(this.props.token)
 	}
 
 	askForPermissioToReceiveNotifications = async () => {
@@ -85,7 +79,7 @@ class App extends React.Component {
 	}
 
 	render() {
-		const { tela, categoria_tipo_id } = this.state
+		const { tela, categoria_id } = this.state
 		const { empresa_id } = this.props
 		return (
 			<Container>
@@ -140,7 +134,7 @@ class App extends React.Component {
 					{
 						tela === 'lancamentos' && 
 							<Lancamentos 
-								categoria_tipo_id={categoria_tipo_id}
+								categoria_id={categoria_id}
 								puxarTodosDados={this.puxarTodosDados}	
 							/>
 					}
@@ -174,14 +168,11 @@ function mapDispatchToProps(dispatch){
 		salvarUsuarioLogado: (elemento) => dispatch(salvarUsuarioLogado(elemento)),
 		pegarUsuarioDaApi: (elemento) => dispatch(pegarUsuarioDaApi(elemento)),
 		pegarUsuarioTipoDaApi: (elemento) => dispatch(pegarUsuarioTipoDaApi(elemento)),
-		pegarSituacaoDaApi: (elemento) => dispatch(pegarSituacaoDaApi(elemento)),
 		pegarCategoriaDaApi: (elemento) => dispatch(pegarCategoriaDaApi(elemento)),
-		pegarCategoriaTipoDaApi: (elemento) => dispatch(pegarCategoriaTipoDaApi(elemento)),
 		pegarEmpresaDaApi: (elemento) => dispatch(pegarEmpresaDaApi(elemento)),
 		pegarEmpresaTipoDaApi: (elemento) => dispatch(pegarEmpresaTipoDaApi(elemento)),
 		pegarContaFixaDaApi: (elemento) => dispatch(pegarContaFixaDaApi(elemento)),
 		pegarLancamentoDaApi: (elemento) => dispatch(pegarLancamentoDaApi(elemento)),
-		pegarLancamentoSituacaoDaApi: (elemento) => dispatch(pegarLancamentoSituacaoDaApi(elemento)),
 	}
 }
 

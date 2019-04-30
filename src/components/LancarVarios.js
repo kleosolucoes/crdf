@@ -11,29 +11,13 @@ import {
 import { connect } from 'react-redux'
 import { formatReal, getMoney, } from '../helpers/funcoes'
 import { lancarVariosNaApi } from '../actions'
+import { Cabecalho } from './Cabecalho'
 import {
-	CATEGORIA_DIZIMO_DINHEIRO,
-	CATEGORIA_DIZIMO_DEBITO,
-	CATEGORIA_DIZIMO_CREDITO,
-	CATEGORIA_DIZIMO_MOEDA,
-	CATEGORIA_DIZIMO_CHEQUE,
-	CATEGORIA_OFERTA_DINHEIRO,
-	CATEGORIA_OFERTA_DEBITO,
-	CATEGORIA_OFERTA_CREDITO,
-	CATEGORIA_OFERTA_MOEDA,
-	CATEGORIA_OFERTA_CHEQUE,
-	CATEGORIA_OFERTA_ESPECIAL_DINHEIRO,
-	CATEGORIA_OFERTA_ESPECIAL_DEBITO,
-	CATEGORIA_OFERTA_ESPECIAL_CREDITO,
-	CATEGORIA_OFERTA_ESPECIAL_MOEDA,
-	CATEGORIA_OFERTA_ESPECIAL_CHEQUE,
-	CATEGORIA_OFERTA_DINHEIRO_INSTITUTO_DE_VENCEDORES,
-	CATEGORIA_OFERTA_DEBITO_INSTITUTO_DE_VENCEDORES,
-	CATEGORIA_OFERTA_CREDITO_INSTITUTO_DE_VENCEDORES,
-	CATEGORIA_OFERTA_MOEDA_INSTITUTO_DE_VENCEDORES,
-	CATEGORIA_OFERTA_CHEQUE_INSTITUTO_DE_VENCEDORES,
+	CATEGORIA_DINHEIRO,
+	CATEGORIA_CARTAO_DEBITO,
+	CATEGORIA_CARTAO_CREDITO,
+	CATEGORIA_CHEQUE,
 } from '../helpers/constantes'
-import { Cabecalho } from './Cabecalho';
 
 class LancarVarios extends React.Component {
 
@@ -41,26 +25,14 @@ class LancarVarios extends React.Component {
 		dia: new Date().getDate(),
 		mes: (new Date().getMonth() + 1),
 		ano: new Date().getFullYear(),
-		dizimoDinheiro: '0.00',
-		dizimoDebito: '0.00',
-		dizimoCredito: '0.00',
-		dizimoMoeda: '0.00',
-		dizimoCheque: '0.00',
-		ofertaDinheiro: '0.00',
-		ofertaDebito: '0.00',
-		ofertaCredito: '0.00',
-		ofertaMoeda: '0.00',
-		ofertaCheque: '0.00',
-		ofertaEspecialDinheiro: '0.00',
-		ofertaEspecialDebito: '0.00',
-		ofertaEspecialCredito: '0.00',
-		ofertaEspecialMoeda: '0.00',
-		ofertaEspecialCheque: '0.00',
-		ofertaDinheiroInstitutoDeVencedores: '0.00',
-		ofertaDebitoInstitutoDeVencedores: '0.00',
-		ofertaCreditoInstitutoDeVencedores: '0.00',
-		ofertaMoedaInstitutoDeVencedores: '0.00',
-		ofertaChequeInstitutoDeVencedores: '0.00',
+		dinheiroDizimo: '0.00',
+		dinheiroOferta: '0.00',
+		debitoDizimo: '0.00',
+		debitoOferta: '0.00',
+		creditoDizimo: '0.00',
+		creditoOferta: '0.00',
+		chequeDizimo: '0.00',
+		chequeOferta: '0.00',
 		mostrarMensagemDeErro: false,
 		camposComErro: [],
 	}
@@ -81,26 +53,14 @@ class LancarVarios extends React.Component {
 
 	ajudadorDeSubmissao = () => {
 		const {
-			dizimoDinheiro,
-			dizimoDebito,
-			dizimoCredito,
-			dizimoMoeda,
-			dizimoCheque,
-			ofertaDinheiro,
-			ofertaDebito,
-			ofertaCredito,
-			ofertaMoeda,
-			ofertaCheque,
-			ofertaEspecialDinheiro,
-			ofertaEspecialDebito,
-			ofertaEspecialCredito,
-			ofertaEspecialMoeda,
-			ofertaEspecialCheque,
-			ofertaDinheiroInstitutoDeVencedores,
-			ofertaDebitoInstitutoDeVencedores,
-			ofertaCreditoInstitutoDeVencedores,
-			ofertaMoedaInstitutoDeVencedores,
-			ofertaChequeInstitutoDeVencedores,
+			dinheiroDizimo,
+			dinheiroOferta,
+			debitoDizimo,
+			debitoOferta,
+			creditoDizimo,
+			creditoOferta,
+			chequeDizimo,
+			chequeOferta,
 			dia,
 			mes,
 			ano,
@@ -140,101 +100,46 @@ class LancarVarios extends React.Component {
 			})
 
 			let elementos = []
-			for(let indiceDeValores = 1; indiceDeValores <= 20; indiceDeValores++){
+			for(let indiceLancamento = 1; indiceLancamento <= 4; indiceLancamento++){
 				const elemento = {}
-				switch(indiceDeValores){
-					case 1: 
-						elemento.valor = dizimoDinheiro
-						elemento.categoria_id = CATEGORIA_DIZIMO_DINHEIRO
-						break;
-					case 2: 
-						elemento.valor = dizimoDebito
-						elemento.categoria_id = CATEGORIA_DIZIMO_DEBITO
-						break;
-					case 3: 
-						elemento.valor = dizimoCredito
-						elemento.categoria_id = CATEGORIA_DIZIMO_CREDITO
-						break;
-					case 4: 
-						elemento.valor = dizimoMoeda
-						elemento.categoria_id = CATEGORIA_DIZIMO_MOEDA
-						break;
-					case 5: 
-						elemento.valor = ofertaDinheiro
-						elemento.categoria_id = CATEGORIA_OFERTA_DINHEIRO
-						break;
-					case 6: 
-						elemento.valor = ofertaDebito
-						elemento.categoria_id = CATEGORIA_OFERTA_DEBITO
-						break;
-					case 7: 
-						elemento.valor = ofertaCredito
-						elemento.categoria_id = CATEGORIA_OFERTA_CREDITO
-						break;
-					case 8: 
-						elemento.valor = ofertaMoeda
-						elemento.categoria_id = CATEGORIA_OFERTA_MOEDA
-						break;
-					case 9: 
-						elemento.valor = ofertaEspecialDinheiro
-						elemento.categoria_id = CATEGORIA_OFERTA_ESPECIAL_DINHEIRO
-						break;
-					case 10: 
-						elemento.valor = ofertaEspecialDebito
-						elemento.categoria_id = CATEGORIA_OFERTA_ESPECIAL_DEBITO
-						break;
-					case 11: 
-						elemento.valor = ofertaEspecialCredito
-						elemento.categoria_id = CATEGORIA_OFERTA_ESPECIAL_CREDITO
-						break;
-					case 12: 
-						elemento.valor = ofertaEspecialMoeda
-						elemento.categoria_id = CATEGORIA_OFERTA_ESPECIAL_MOEDA
-						break;
-					case 13: 
-						elemento.valor = ofertaDinheiroInstitutoDeVencedores
-						elemento.categoria_id = CATEGORIA_OFERTA_DINHEIRO_INSTITUTO_DE_VENCEDORES
-						break;
-					case 14: 
-						elemento.valor = ofertaDebitoInstitutoDeVencedores
-						elemento.categoria_id = CATEGORIA_OFERTA_DEBITO_INSTITUTO_DE_VENCEDORES
-						break;
-					case 15: 
-						elemento.valor = ofertaCreditoInstitutoDeVencedores
-						elemento.categoria_id = CATEGORIA_OFERTA_CREDITO_INSTITUTO_DE_VENCEDORES
-						break;
-					case 16: 
-						elemento.valor = ofertaMoedaInstitutoDeVencedores
-						elemento.categoria_id = CATEGORIA_OFERTA_MOEDA_INSTITUTO_DE_VENCEDORES
-						break;
-					case 17: 
-						elemento.valor = dizimoCheque
-						elemento.categoria_id = CATEGORIA_DIZIMO_CHEQUE
-						break;
-					case 18: 
-						elemento.valor = ofertaCheque
-						elemento.categoria_id = CATEGORIA_OFERTA_CHEQUE
-						break;
-					case 19: 
-						elemento.valor = ofertaEspecialCheque
-						elemento.categoria_id = CATEGORIA_OFERTA_ESPECIAL_CHEQUE
-						break;
-					case 20: 
-						elemento.valor = ofertaChequeInstitutoDeVencedores
-						elemento.categoria_id = CATEGORIA_OFERTA_CHEQUE_INSTITUTO_DE_VENCEDORES
-						break;
-					default:
-						break;
+				elemento.descricao = ''
+				elemento.dia = dia
+				elemento.mes = mes
+				elemento.ano = ano
+				elemento.usuario_id = usuarioLogado.usuario_id
+				elemento.empresa_id = usuarioLogado.empresa_id
+
+				if(indiceLancamento === 1){
+					if(dinheiroDizimo || dinheiroOferta){
+						elemento.categoria_id = CATEGORIA_DINHEIRO
+						elemento.dizimo = dinheiroDizimo
+						elemento.oferta = dinheiroOferta
+						elementos.push(elemento)
+					}
 				}
-				if(!isNaN(elemento.valor) && elemento.valor !== '0.00'){
-					elemento.taxa = '0.00'
-					elemento.descricao = ''
-					elemento.dia = dia
-					elemento.mes = mes
-					elemento.ano = ano
-					elemento.usuario_id = usuarioLogado.usuario_id
-					elemento.empresa_id = usuarioLogado.empresa_id
-					elementos.push(elemento)
+				if(indiceLancamento === 2){
+					if(debitoDizimo || debitoOferta){
+						elemento.categoria_id = CATEGORIA_CARTAO_DEBITO
+						elemento.dizimo = debitoDizimo
+						elemento.oferta = debitoOferta
+						elementos.push(elemento)
+					}
+				}
+				if(indiceLancamento === 3){
+					if(creditoDizimo || creditoOferta){
+						elemento.categoria_id = CATEGORIA_CARTAO_CREDITO
+						elemento.dizimo = creditoDizimo
+						elemento.oferta = creditoOferta
+						elementos.push(elemento)
+					}
+				}
+				if(indiceLancamento === 4){
+					if(chequeDizimo || chequeOferta){
+						elemento.categoria_id = CATEGORIA_CHEQUE
+						elemento.dizimo = chequeDizimo
+						elemento.oferta = chequeOferta
+						elementos.push(elemento)
+					}
 				}
 			}
 			lancarVariosNaApi(elementos, usuarioLogado.token)
@@ -245,26 +150,14 @@ class LancarVarios extends React.Component {
 
 	render() {
 		const {
-			dizimoDinheiro,
-			dizimoDebito,
-			dizimoCredito,
-			dizimoMoeda,
-			dizimoCheque,
-			ofertaDinheiro,
-			ofertaDebito,
-			ofertaCredito,
-			ofertaMoeda,
-			ofertaCheque,
-			ofertaEspecialDinheiro,
-			ofertaEspecialDebito,
-			ofertaEspecialCredito,
-			ofertaEspecialMoeda,
-			ofertaEspecialCheque,
-			ofertaDinheiroInstitutoDeVencedores,
-			ofertaDebitoInstitutoDeVencedores,
-			ofertaCreditoInstitutoDeVencedores,
-			ofertaMoedaInstitutoDeVencedores,
-			ofertaChequeInstitutoDeVencedores,
+			dinheiroDizimo,
+			dinheiroOferta,
+			debitoDizimo,
+			debitoOferta,
+			creditoDizimo,
+			creditoOferta,
+			chequeDizimo,
+			chequeOferta,
 			dia,
 			mes,
 			ano,
@@ -287,70 +180,46 @@ class LancarVarios extends React.Component {
 
 		let total = formatReal( 
 			(
-				getMoney(dizimoDinheiro) +
-				getMoney(dizimoDebito) +
-				getMoney(dizimoCredito) +
-				getMoney(dizimoMoeda) +
-				getMoney(dizimoCheque) +
+				getMoney(dinheiroDizimo) +
+				getMoney(dinheiroOferta) +
 
-				getMoney(ofertaDinheiro) +
-				getMoney(ofertaDebito) +
-				getMoney(ofertaCredito) +
-				getMoney(ofertaMoeda) +
-				getMoney(ofertaCheque) +
+				getMoney(debitoDizimo) +
+				getMoney(debitoOferta) +
 
-				getMoney(ofertaEspecialDinheiro) +
-				getMoney(ofertaEspecialDebito) +
-				getMoney(ofertaEspecialCredito) +
-				getMoney(ofertaEspecialMoeda) +
-				getMoney(ofertaEspecialCheque) +
+				getMoney(creditoDizimo) +
+				getMoney(creditoOferta) +
 
-				getMoney(ofertaDinheiroInstitutoDeVencedores) +
-				getMoney(ofertaDebitoInstitutoDeVencedores) +
-				getMoney(ofertaCreditoInstitutoDeVencedores) +
-				getMoney(ofertaMoedaInstitutoDeVencedores) +
-				getMoney(ofertaChequeInstitutoDeVencedores)
+				getMoney(chequeDizimo) +
+				getMoney(chequeOferta)
 			)
 			.toString()
 			.padStart(3, '0')
 		)
-		let totalDizimo = formatReal(
+		let totalDinheiro = formatReal(
 			(
-				getMoney(dizimoCredito) +
-				getMoney(dizimoDebito) +
-				getMoney(dizimoDinheiro) +
-				getMoney(dizimoMoeda) +
-				getMoney(dizimoCheque)
+				getMoney(dinheiroDizimo) +
+				getMoney(dinheiroOferta)
 			).toString()
 			.padStart(3, '0')
 		)
-		let totalOferta = formatReal(
+		let totalDebito = formatReal(
 			(
-				getMoney(ofertaCredito) +
-				getMoney(ofertaDebito) +
-				getMoney(ofertaDinheiro) +
-				getMoney(ofertaMoeda) +
-				getMoney(ofertaCheque)
+				getMoney(debitoDizimo) +
+				getMoney(debitoOferta) 
 			).toString()
 			.padStart(3, '0')
 		)
-		let totalOfertaEspecial = formatReal(
+		let totalCredito = formatReal(
 			(
-				getMoney(ofertaEspecialCredito) +
-				getMoney(ofertaEspecialDebito) +
-				getMoney(ofertaEspecialDinheiro) +
-				getMoney(ofertaEspecialMoeda) +
-				getMoney(ofertaEspecialCheque)
+				getMoney(creditoDizimo) +
+				getMoney(creditoOferta)
 			).toString()
 			.padStart(3, '0')
 		)
-		let totalOfertaInstitutoDeVencedores = formatReal(
+		let totalCheque = formatReal(
 			(
-				getMoney(ofertaDinheiroInstitutoDeVencedores) +
-				getMoney(ofertaDebitoInstitutoDeVencedores) +
-				getMoney(ofertaCreditoInstitutoDeVencedores) +
-				getMoney(ofertaMoedaInstitutoDeVencedores) +
-				getMoney(ofertaChequeInstitutoDeVencedores)
+				getMoney(chequeDizimo) +
+				getMoney(chequeOferta)
 			).toString()
 			.padStart(3, '0')
 		)
@@ -358,151 +227,89 @@ class LancarVarios extends React.Component {
 		if(isNaN(total)){
 			total = 'Valore(s) Inválido(s)'
 		}
-		if(isNaN(totalDizimo)){
-			totalDizimo = 'Valore(s) Inválido(s)'
+		if(isNaN(totalDinheiro)){
+			totalDinheiro = 'Valore(s) Inválido(s)'
 		}
-		if(isNaN(totalOferta)){
-			totalOferta = 'Valore(s) Inválido(s)'
+		if(isNaN(totalDebito)){
+			totalDebito = 'Valore(s) Inválido(s)'
 		}
-		if(isNaN(totalOfertaEspecial)){
-			totalOfertaEspecial = 'Valore(s) Inválido(s)'
+		if(isNaN(totalCredito)){
+			totalCredito = 'Valore(s) Inválido(s)'
 		}
-		if(isNaN(totalOfertaInstitutoDeVencedores)){
-			totalOfertaInstitutoDeVencedores = 'Valore(s) Inválido(s)'
+		if(isNaN(totalCheque)){
+			totalCheque = 'Valore(s) Inválido(s)'
 		}
 
 		const tiposDeLancamentos = [
 			{
-				label: 'Dízimo',				
+				label: 'Dinheiro Cédulas/Moeda',				
 				campos: [
 					{
-						label: 'Dinheiro',
-						name: 'dizimoDinheiro',
-						valor: dizimoDinheiro,
+						label: 'Dizimo',
+						name: 'dinheiroDizimo',
+						valor: dinheiroDizimo,
 					},
 					{
-						label: 'Débito',
-						name: 'dizimoDebito',
-						valor: dizimoDebito,
+						label: 'Oferta',
+						name: 'dinheiroOferta',
+						valor: dinheiroOferta,
 					},
-					{
-						label: 'Crédito',
-						name: 'dizimoCredito',
-						valor: dizimoCredito,
-					},
-					{
-						label: 'Moeda',
-						name: 'dizimoMoeda',
-						valor: dizimoMoeda,
-					},
-					{
-						label: 'Cheque',
-						name: 'dizimoCheque',
-						valor: dizimoCheque,
-					},
-	
 				],
-				total: totalDizimo,
-				labelTotal: 'DÍZIMO',
+				total: totalDinheiro,
+				labelTotal: 'DINHEIRO CÉDULAS/MOEDAS',
 			},
 			{
-				label: 'Oferta',				
+				label: 'Cartão Débito',				
 				campos: [
 					{
-						label: 'Dinheiro',
-						name: 'ofertaDinheiro',
-						valor: ofertaDinheiro,
+						label: 'Dízimo',
+						name: 'debitoDizimo',
+						valor: debitoDizimo,
 					},
 					{
-						label: 'Débito',
-						name: 'ofertaDebito',
-						valor: ofertaDebito,
-					},
-					{
-						label: 'Crédito',
-						name: 'ofertaCredito',
-						valor: ofertaCredito,
-					},
-					{
-						label: 'Moeda',
-						name: 'ofertaMoeda',
-						valor: ofertaMoeda,
-					},
-					{
-						label: 'Cheque',
-						name: 'ofertaCheque',
-						valor: ofertaCheque,
+						label: 'Oferta',
+						name: 'debitoOferta',
+						valor: debitoOferta,
 					},
 				],
-				total: totalOferta,
-				labelTotal: 'OFERTA',
+				total: totalDebito,
+				labelTotal: 'CARTÃO DÉBITO',
 			},
 			{
-				label: 'Oferta Especial',				
+				label: 'Cartão Crédito',				
 				campos: [
 					{
-						label: 'Dinheiro',
-						name: 'ofertaEspecialDinheiro',
-						valor: ofertaEspecialDinheiro,
+						label: 'Dízimo',
+						name: 'creditoDizimo',
+						valor: creditoDizimo,
 					},
 					{
-						label: 'Débito',
-						name: 'ofertaEspecialDebito',
-						valor: ofertaEspecialDebito,
-					},
-					{
-						label: 'Crédito',
-						name: 'ofertaEspecialCredito',
-						valor: ofertaEspecialCredito,
-					},
-					{
-						label: 'Moeda',
-						name: 'ofertaEspecialMoeda',
-						valor: ofertaEspecialMoeda,
-					},
-					{
-						label: 'Cheque',
-						name: 'ofertaEspecialCheque',
-						valor: ofertaEspecialCheque,
+						label: 'Oferta',
+						name: 'creditoOferta',
+						valor: creditoOferta,
 					},
 				],
-				total: totalOfertaEspecial,
-				labelTotal: 'OFERTA ESPECIAL',
+				total: totalCredito,
+				labelTotal: 'CARTÃO CRÉDITO',
 			},
 			{
-				label: 'Oferta Instituto de Vencedores',				
+				label: 'Cheque',				
 				campos: [
 					{
-						label: 'Dinheiro',
-						name: 'ofertaDinheiroInstitutoDeVencedores',
-						valor: ofertaDinheiroInstitutoDeVencedores,
+						label: 'Dízimo',
+						name: 'chequeDizimo',
+						valor: chequeDizimo,
 					},
 					{
-						label: 'Débito',
-						name: 'ofertaDebitoInstitutoDeVencedores',
-						valor: ofertaDebitoInstitutoDeVencedores,
-					},
-					{
-						label: 'Crédito',
-						name: 'ofertaCreditoInstitutoDeVencedores',
-						valor: ofertaCreditoInstitutoDeVencedores,
-					},
-					{
-						label: 'Moeda',
-						name: 'ofertaMoedaInstitutoDeVencedores',
-						valor: ofertaMoedaInstitutoDeVencedores,
-					},
-					{
-						label: 'Cheque',
-						name: 'ofertaChequeInstitutoDeVencedores',
-						valor: ofertaChequeInstitutoDeVencedores,
+						label: 'Oferta',
+						name: 'chequeOferta',
+						valor: chequeOferta,
 					},
 				],
-				total: totalOfertaInstitutoDeVencedores,
-				labelTotal: 'OFERTA INSTITUTO DE VENCEDORES',
+				total: totalCheque,
+				labelTotal: 'CHEQUE',
 			},
 		]
-	
 		return (
 			<div style={{marginTop: 70, marginBottom: 20}}> 
 				<Cabecalho 
@@ -511,46 +318,46 @@ class LancarVarios extends React.Component {
 				<Label style={{fontWeight: 400}} for="data">DATA DE LANÇAMENTO</Label>
 				<Row>
 					<Col> 
-					<FormGroup>
-					<Label for="dia">* Dia:</Label>
-					<Input 
-						type="select" 
-						name="dia" 
-						id="dia" 
-						value={dia} 
-						onChange={this.ajudadorDeCampo}
-						invalid={camposComErro.includes('dia') ? true : null}
-					>
-						<option value='0'>Selecione</option>
-						{
-							arrayDias.map(dia => dia)
-						}
-					</Input>
-					{camposComErro.includes('dia') && <Alert color='danger'>Selecione o Dia</Alert>}
+						<FormGroup>
+							<Label for="dia">* Dia:</Label>
+							<Input 
+								type="select" 
+								name="dia" 
+								id="dia" 
+								value={dia} 
+								onChange={this.ajudadorDeCampo}
+								invalid={camposComErro.includes('dia') ? true : null}
+							>
+								<option value='0'>Selecione</option>
+								{
+									arrayDias.map(dia => dia)
+								}
+							</Input>
+						{camposComErro.includes('dia') && <Alert color='danger'>Selecione o Dia</Alert>}
 					</FormGroup>
-				</Col>
-				
-				<Col>
-				<FormGroup>
-					<Label for="mes">* Mês:</Label>
-					<Input 
-						type="select" 
-						name="mes" 
-						id="mes" 
-						value={mes} 
-						onChange={this.ajudadorDeCampo}
-						invalid={camposComErro.includes('mes') ? true : null}
-					>
-						<option value='0'>Selecione</option>
-						{
-							arrayMes.map(mes => mes)
-						}
-					</Input>
-					{camposComErro.includes('mes') && <Alert color='danger'>Selecione o Mês</Alert>}
-				</FormGroup>
 				</Col>
 
 				<Col>
+					<FormGroup>
+						<Label for="mes">* Mês:</Label>
+						<Input 
+							type="select" 
+							name="mes" 
+							id="mes" 
+							value={mes} 
+							onChange={this.ajudadorDeCampo}
+							invalid={camposComErro.includes('mes') ? true : null}
+						>
+							<option value='0'>Selecione</option>
+							{
+								arrayMes.map(mes => mes)
+							}
+						</Input>
+					{camposComErro.includes('mes') && <Alert color='danger'>Selecione o Mês</Alert>}
+				</FormGroup>
+			</Col>
+
+			<Col>
 				<FormGroup>
 					<Label for="ano">* Ano:</Label>
 					<Input 
@@ -566,66 +373,66 @@ class LancarVarios extends React.Component {
 							arrayAnos.map(ano => ano)
 						}
 					</Input>
-					{camposComErro.includes('ano') && <Alert color='danger'>Selecione o Ano</Alert>}
-				</FormGroup>
-				</Col>
-				</Row>
-				{
-					tiposDeLancamentos.map(tipoDeLancamento => (
-						<div className="container-item" key={tipoDeLancamento.label}>
-							<div style={{padding:10}}>
-								<Row style={{justifyContent: 'center', paddingBottom: 10, paddingTop: 5}}>
-									<h6><b>{tipoDeLancamento.label}</b></h6>
-								</Row>
-									{
-										tipoDeLancamento.campos.map(campo => (
-											<Row key={campo.name}>
-												<Col>
-													{campo.label}
-												</Col>
-												<Col>
-													<Input
-														type='number'
-														name={campo.name}
-														value={campo.valor}
-														onChange={this.ajudadorDeCampo}
-													/>
-												</Col>
-											</Row>
-										))
-									}
-							</div>
-							<div className="total-categoria-lancado">
-								<Row>
-									<Col style={{paddingRight: 0, paddingLeft: 0}}> <b>TOTAL {tipoDeLancamento.labelTotal}</b> </Col>
-									<Col> <b>{tipoDeLancamento.total}</b> </Col>
-								</Row>
-							</div>
-						</div>
-					))
-				}
-				{
-					mostrarMensagemDeErro &&
-						<div style={{padding: 10}}>
-							<Alert color='warning'>
-								Campos inválidos
-							</Alert>
-						</div>
-				}
-				<div style={{padding: 10, marginTop: 5, marginBottom: 5}}>
-					<Row className="total-lancado">
-						<Col> <b>TOTAL</b> </Col>
-						<Col> <b>{total}</b> </Col>
-						<Col>
-							<Button 
-								type='button' 
-								className="botao-lancar"
-								onClick={this.ajudadorDeSubmissao}>
-								<b>Salvar</b>
-							</Button>
-						</Col>
+				{camposComErro.includes('ano') && <Alert color='danger'>Selecione o Ano</Alert>}
+			</FormGroup>
+		</Col>
+	</Row>
+	{
+		tiposDeLancamentos.map(tipoDeLancamento => (
+			<div className="container-item" key={tipoDeLancamento.label}>
+				<div style={{padding:10}}>
+					<Row style={{justifyContent: 'center', paddingBottom: 10, paddingTop: 5}}>
+						<h6><b>{tipoDeLancamento.label}</b></h6>
+					</Row>
+					{
+						tipoDeLancamento.campos.map(campo => (
+							<Row key={campo.name}>
+								<Col>
+									{campo.label}
+								</Col>
+								<Col>
+									<Input
+										type='number'
+										name={campo.name}
+										value={campo.valor}
+										onChange={this.ajudadorDeCampo}
+									/>
+								</Col>
+							</Row>
+						))
+					}
+				</div>
+				<div className="total-categoria-lancado">
+					<Row>
+						<Col style={{paddingRight: 0, paddingLeft: 0}}> <b>TOTAL {tipoDeLancamento.labelTotal}</b> </Col>
+						<Col> <b>{tipoDeLancamento.total}</b> </Col>
 					</Row>
 				</div>
+			</div>
+		))
+	}
+	{
+		mostrarMensagemDeErro &&
+			<div style={{padding: 10}}>
+				<Alert color='warning'>
+					Campos inválidos
+				</Alert>
+			</div>
+	}
+	<div style={{padding: 10, marginTop: 5, marginBottom: 5}}>
+		<Row className="total-lancado">
+			<Col> <b>TOTAL</b> </Col>
+			<Col> <b>{total}</b> </Col>
+			<Col>
+				<Button 
+					type='button' 
+					className="botao-lancar"
+					onClick={this.ajudadorDeSubmissao}>
+					<b>Salvar</b>
+				</Button>
+			</Col>
+		</Row>
+	</div>
 			</div>
 		)
 	}

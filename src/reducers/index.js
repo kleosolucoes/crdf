@@ -1,15 +1,11 @@
 import { combineReducers } from 'redux'
 import {
-	PEGAR_SITUACOES, 
 	PEGAR_LANCAMENTOS, 
 	SALVAR_LANCAMENTO,
-	PEGAR_LANCAMENTO_SITUACAO,
-	SALVAR_LANCAMENTO_SITUACAO,
 	PEGAR_USUARIOS,
 	SALVAR_USUARIO,
 	PEGAR_USUARIO_TIPO,
 	PEGAR_CATEGORIAS,
-	PEGAR_CATEGORIA_TIPO,
 	SALVAR_CATEGORIA,
 	PEGAR_EMPRESAS,
 	SALVAR_EMPRESA,
@@ -101,15 +97,6 @@ function categorias(state = [], action){
 	}
 }
 
-function categoriaTipo(state = [], action){
-	switch(action.type){
-		case PEGAR_CATEGORIA_TIPO:
-			return [...action.elementos]
-		default:
-			return state
-	}
-}
-
 function lancamentos(state = [], action){
 	switch(action.type){
 		case PEGAR_LANCAMENTOS:
@@ -163,37 +150,6 @@ function usuarios(state = [], action){
 	}
 }
 
-function situacoes(state = [], action){
-	switch(action.type){
-		case PEGAR_SITUACOES:
-			return [...action.elementos]
-		default:
-			return state
-	}
-}
-
-function lancamentoSituacao(state = [], action){
-	switch(action.type){
-		case PEGAR_LANCAMENTO_SITUACAO:
-			return [...action.elementos]
-		case SALVAR_LANCAMENTO_SITUACAO:
-			if(action.novo === true){
-				return [...state, action.elemento]
-			}else{
-				const estadoAtualizado = state.map(elemento => {
-					if(elemento._id === action.elemento._id){
-						return action.elemento
-					}else{
-						return elemento
-					}
-				})
-				return [...estadoAtualizado]
-			}
-		default:
-			return state
-	}
-}
-
 function usuarioLogado(state = stateUsuarioLogado, action){
 	switch(action.type){
 		case PEGAR_USUARIO_LOGADO:
@@ -209,11 +165,8 @@ export default combineReducers({
 	empresaTipo,
 	empresas,
 	categorias,
-	categoriaTipo,
 	lancamentos,
 	usuarios,
-	situacoes,
-	lancamentoSituacao,
 	contaFixa,
 	usuarioTipo,
 	usuarioLogado

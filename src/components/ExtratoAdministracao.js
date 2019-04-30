@@ -57,7 +57,7 @@ class ExtratoAdministracao extends React.Component {
 			saldo,
 			naoRecebidoCredito,
 			naoRecebidoDebito,
-			listaDeNaoRecebidoPorCategoriaTipo,
+			listaDeNaoRecebidoPorCategoria,
 		} = this.props
 		const {
 			carregando,
@@ -84,7 +84,7 @@ class ExtratoAdministracao extends React.Component {
 				<div style={{marginTop: 15, backgroundColor: LIGHTGRAY}}>
 					<Row style={{margin: 0}}>
 						<Col style={{textAlign: 'center', backgroundColor: DARKGREEN, padding: 5, color: '#fff'}}>
-							Não Aceitos
+							Não Recebidos
 						</Col>
 					</Row>
 					{
@@ -96,30 +96,33 @@ class ExtratoAdministracao extends React.Component {
 					<Table>
 						<thead style={{background: LIGHTGREEN, color: '#fff'}}>
 							<tr>
-								<th>Grupo</th>
-								<th style={{paddingRight: 30, paddingLeft: 30, verticalAlign: 'middle'}}>Valor</th>
+								<th>Categoria</th>
+								<th style={{paddingRight: 30, paddingLeft: 30, verticalAlign: 'middle'}}>Soma</th>
 							</tr>
 						</thead>
 						{
 							!carregando && 
-							listaDeNaoRecebidoPorCategoriaTipo &&
-								listaDeNaoRecebidoPorCategoriaTipo.map(categoriaTipo => {
-									if(categoriaTipo.valor === 0){
-										categoriaTipo.valor = '0.00'
+							listaDeNaoRecebidoPorCategoria&&
+								listaDeNaoRecebidoPorCategoria.map(categoria => {
+									if(categoria.dizimo === 0){
+										categoria.dizimo = '0.00'
+									}
+									if(categoria.oferta === 0){
+										categoria.oferta = '0.00'
 									}
 									return (
-										<tbody key={`categoriaNaoRecebido${categoriaTipo._id}`}>
+										<tbody key={`categoriaNaoRecebido${categoria._id}`}>
 											<tr>
 												<td>
 													<Button className="botaoTipoCategoria"
-														onClick={() => this.props.alterarTela('lancamentos', categoriaTipo._id)}
+														onClick={() => this.props.alterarTela('lancamentos', categoria._id)}
 														style={{textAlign: 'left'}}
 													>
-														{categoriaTipo.nome}
+														{categoria.nome}
 													</Button>
 												</td>
 												<td>
-													R$ {Number(categoriaTipo.valor).toFixed(2)}
+													R$ {Number(categoria.soma).toFixed(2)}
 												</td>
 											</tr>
 										</tbody>
@@ -141,34 +144,23 @@ const mapStateToProps = state => {
 	let saldo = 0.00
 	let naoRecebidoCredito = 0.00
 	let naoRecebidoDebito = 0.00
-	let listaDeNaoRecebidoPorCategoriaTipo = []
-	if(
-		state.categorias 
-		&& state.lancamentoSituacao
-		&& state.lancamentos
-		&& state.situacoes
-		&& state.categoriaTipo
-	){
-		listaDeNaoRecebidoPorCategoriaTipo = state.categoriaTipo.map(categoriaTipo => {
-			categoriaTipo.valor = 0.00
-			return categoriaTipo
-		})
-		state.lancamentos
-			.filter(lancamento => lancamento.data_inativacao === null)
-			.forEach(lancamento => {
-				const lancamentoSituacaoAtiva = state.lancamentoSituacao
-					.find(lancamentoSituacao => lancamento._id.toString() === lancamentoSituacao.lancamento_id 
-						&& lancamentoSituacao.data_inativacao === null)
-
-				if(lancamentoSituacaoAtiva){
-					const situacaoAtiva = state.situacoes
-						.find(situacao => lancamentoSituacaoAtiva.situacao_id === situacao._id.toString())
-
+	let listaDeNaoRecebidoPorCategoria = []
+		if(
+			state.categorias 
+			&& state.lancamentos
+		){
+			listaDeNaoRecebidoPorCategoria = state.categorias.map(categoria=> {
+				categoria.soma = 0.00
+				return categoria
+			})
+			state.lancamentos
+				.filter(lancamento => lancamento.data_inativacao === null)
+				.forEach(lancamento => {
 					const categoriaAtiva = state.categorias
 						.find(categoria => lancamento.categoria_id === categoria._id.toString())
 
-					let valorFormatado = parseFloat(lancamento.valor.toFixed(2))
-					if(situacaoAtiva._id === SITUACAO_RECEBIDO){
+					if(lancamento.recebido){
+						let valorFormatado = parseFloat(lancamento.recebido.toFixed(2))
 						if(categoriaAtiva.credito_debito === 'C'){
 							saldo += valorFormatado
 						}else{
@@ -176,36 +168,33 @@ const mapStateToProps = state => {
 						}
 						saldo = parseFloat(saldo.toFixed(2))
 					}
-					if(situacaoAtiva._id === SITUACAO_NAO_RECEBIDO){
-						if(categoriaAtiva.credito_debito === 'C'){
-							naoRecebidoCredito += valorFormatado
-						}else{
-							naoRecebidoDebito += valorFormatado
-						}
-						naoRecebidoCredito = parseFloat(naoRecebidoCredito.toFixed(2))
-						naoRecebidoDebito = parseFloat(naoRecebidoDebito.toFixed(2))
-
-						if(categoriaAtiva.categoria_tipo_id){
-							listaDeNaoRecebidoPorCategoriaTipo = 
-								listaDeNaoRecebidoPorCategoriaTipo
-								.map(categoriaTipo => {
-									if(categoriaTipo._id === categoriaAtiva.categoria_tipo_id){
-										categoriaTipo.valor += valorFormatado
-										categoriaTipo.valor = parseFloat(categoriaTipo.valor.toFixed(2))
+					if(!lancamento.recebido){
+						listaDeNaoRecebidoPorCategoria = 
+							listaDeNaoRecebidoPorCategoria
+							.map(categoria => {
+								if(categoria._id === categoriaAtiva._id){
+									if(lancamento.dizimo){
+										let valorFormatado = parseFloat(lancamento.dizimo.toFixed(2))
+										categoria.soma += valorFormatado
+										categoria.soma = parseFloat(categoria.soma.toFixed(2))
 									}
-									return categoriaTipo
-								})
-						}
+									if(lancamento.oferta){
+										let valorFormatado = parseFloat(lancamento.oferta.toFixed(2))
+										categoria.soma += valorFormatado
+										categoria.soma = parseFloat(categoria.soma.toFixed(2))
+									}
+								}
+								return categoria
+							})
 					}
-				}
-			})
-	}
+				})
+		}
 
 	return {
 		saldo,
 		naoRecebidoCredito,
 		naoRecebidoDebito,
-		listaDeNaoRecebidoPorCategoriaTipo,
+		listaDeNaoRecebidoPorCategoria,
 		categorias: state.categorias,
 		lancamentos: state.lancamentos,
 		token,

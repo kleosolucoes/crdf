@@ -17,14 +17,22 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
 class Lancamentos extends React.Component {
 
+	componentDidMount(){
+		const data = new Date()
+		const ultimoDia = new Date(data.getFullYear(), data.getMonth()+1, 0).getDate()
+		this.setState({
+			diaFinal: ultimoDia,
+			categoria_id: this.props.categoria_id,
+		})
+	}
+
 	state = {
-		categoria_tipo_id: 0,
 		categoria_id: 0,
 		empresa_id: 0,
-		diaInicial: new Date().getDate(),
+		diaInicial: 1,
 		mesInicial: (new Date().getMonth() + 1),
 		anoInicial: new Date().getFullYear(),
-		diaFinal: new Date().getDate(),
+		diaFinal: 0,
 		mesFinal: (new Date().getMonth() + 1),
 		anoFinal: new Date().getFullYear(),
 		mostrarAlterarLancamento: false,
@@ -50,10 +58,6 @@ class Lancamentos extends React.Component {
 		this.setState({[name]: valor})
 	}
 
-	componentDidMount(){
-		this.setState({categoria_tipo_id: this.props.categoria_tipo_id})
-	}
-
 	alternarMostrarAlterarLancamento = (lancamento_id) => this.setState({
 		mostrarAlterarLancamento: !this.state.mostrarAlterarLancamento,
 		lancamento_id,
@@ -62,13 +66,11 @@ class Lancamentos extends React.Component {
 	render() {
 		const { 
 			lancamentos, 
-			categoriaTipo,
 			categorias,
 			empresas,
 			empresa_usuario_logado_id,
 		} = this.props
 		const {
-			categoria_tipo_id,
 			categoria_id,
 			empresa_id,
 			diaInicial,
@@ -83,18 +85,6 @@ class Lancamentos extends React.Component {
 		} = this.state
 		let categoriasFiltradas = categorias
 		let lancamentosFiltrados = lancamentos
-		if(categoria_tipo_id && parseInt(categoria_tipo_id) !== 0){
-			lancamentosFiltrados = lancamentosFiltrados
-				.filter(lancamento => {
-					const categoriaDoLancamento = categorias.find(categoria => lancamento.categoria_id === categoria._id)
-					if(categoriaDoLancamento.categoria_tipo_id === categoria_tipo_id){
-						return true
-					}else{
-						return false
-					}
-				})
-			categoriasFiltradas = categorias.filter(categoria => categoria.categoria_tipo_id === categoria_tipo_id)
-		}
 		if(categoria_id && parseInt(categoria_id) !== 0){
 			lancamentosFiltrados = lancamentosFiltrados
 				.filter(lancamento => lancamento.categoria_id === categoria_id)
@@ -127,7 +117,7 @@ class Lancamentos extends React.Component {
 				}
 			}
 		}
-	
+
 		let arrayDias = []
 		for(let indiceDias = 1; indiceDias <= 31; indiceDias++){
 			arrayDias.push(<option key={indiceDias} value={indiceDias}>{indiceDias}</option>)
@@ -168,88 +158,28 @@ class Lancamentos extends React.Component {
 								</Button>
 							</Row>
 							<div className="container-lancamentos">
-							<h5>Filtro</h5>
-							<Row>
-								<Col>
-									<FormGroup>
-										<Label for="categoria_tipo_id">Grupo</Label>
-										<Input 
-											type="select" 
-											name="categoria_tipo_id" 
-											id="categoria_tipo_id" 
-											value={categoria_tipo_id} 
-											onChange={this.ajudadorDeCampo}
-										>
-											<option value='0'>Todas</option>
-											{
-												categoriaTipo &&
-													categoriaTipo.map(categoriaTipo => {
-														return (
-															<option 
-																key={categoriaTipo._id}
-																value={categoriaTipo._id}
-															>
-																{categoriaTipo.nome}
-															</option>
-														)
-													})
-											}
-										</Input>
-									</FormGroup>
-								</Col>
-							{/* </Row>
-							<Row> */}
-								<Col>
-									<FormGroup>
-										<Label for="categoria_id">Categoria</Label>
-										<Input 
-											type="select" 
-											name="categoria_id" 
-											id="categoria_id" 
-											value={categoria_id} 
-											onChange={this.ajudadorDeCampo}
-										>
-											<option value='0'>Todas</option>
-											{
-												categoriasFiltradas &&
-													categoriasFiltradas.map(categoria => {
-														return (
-															<option 
-																key={categoria._id}
-																value={categoria._id}
-															>
-																{categoria.nome}
-															</option>
-														)
-													})
-											}
-										</Input>
-									</FormGroup>
-								</Col>
-							</Row>
-							{
-								empresa_usuario_logado_id === EMPRESA_ADMINISTRACAO_ID && 
+								<h5>Filtro</h5>
 								<Row>
 									<Col>
 										<FormGroup>
-											<Label for="empresa_id">Empresa</Label>
+											<Label for="categoria_id">Categoria</Label>
 											<Input 
 												type="select" 
-												name="empresa_id" 
-												id="empresa_id" 
-												value={empresa_id} 
+												name="categoria_id" 
+												id="categoria_id" 
+												value={categoria_id} 
 												onChange={this.ajudadorDeCampo}
 											>
 												<option value='0'>Todas</option>
 												{
-													empresas &&
-														empresas.map(empresa => {
+													categoriasFiltradas &&
+														categoriasFiltradas.map(categoria => {
 															return (
 																<option 
-																	key={empresa._id}
-																	value={empresa._id}
+																	key={categoria._id}
+																	value={categoria._id}
 																>
-																	{empresa.nome}
+																	{categoria.nome}
 																</option>
 															)
 														})
@@ -258,122 +188,153 @@ class Lancamentos extends React.Component {
 										</FormGroup>
 									</Col>
 								</Row>
-							}
-							<Row>
-								<Col sm="6">
-									<Label><b>Período Inicial</b></Label>
+								{
+									empresa_usuario_logado_id === EMPRESA_ADMINISTRACAO_ID && 
 									<Row>
-									<Col>
-										<FormGroup>
-											<Label for="diaInicial">Dia</Label>
-											<Input 
-												type="select" 
-												name="diaInicial" 
-												id="diaInicial" 
-												value={diaInicial} 
-												onChange={this.ajudadorDeCampo}
-											>
-												<option value='0'>Todos</option>
-												{
-													arrayDias.map(dia => dia)
-												}
-											</Input>
-										</FormGroup>
-									</Col>
-									<Col style={{paddingRight:0, paddingLeft:0}}>
-										<FormGroup>
-											<Label for="mesInicial">Mês</Label>
-											<Input 
-												type="select" 
-												name="mesInicial" 
-												id="mesInicial" 
-												value={mesInicial} 
-												onChange={this.ajudadorDeCampo}
-											>
-												<option value='0'>Todos</option>
-												{
-													arrayMes.map(mes => mes)
-												}
-											</Input>
-										</FormGroup>
-									</Col>
-									<Col>
-										<FormGroup>
-											<Label for="anoInicial">Ano</Label>
-											<Input 
-												type="select" 
-												name="anoInicial" 
-												id="anoInicial" 
-												value={anoInicial} 
-												onChange={this.ajudadorDeCampo}
-											>
-												<option value='0'>Todos</option>
-												{
-													arrayAnos.map(ano => ano)
-												}
-											</Input>
-										</FormGroup>
-									</Col>
+										<Col>
+											<FormGroup>
+												<Label for="empresa_id">Empresa</Label>
+												<Input 
+													type="select" 
+													name="empresa_id" 
+													id="empresa_id" 
+													value={empresa_id} 
+													onChange={this.ajudadorDeCampo}
+												>
+													<option value='0'>Todas</option>
+													{
+														empresas &&
+															empresas.map(empresa => {
+																return (
+																	<option 
+																		key={empresa._id}
+																		value={empresa._id}
+																	>
+																		{empresa.nome}
+																	</option>
+																)
+															})
+													}
+												</Input>
+											</FormGroup>
+										</Col>
 									</Row>
-								</Col>
-
-								<Col sm="6">
-								<Label><b>Período Final</b></Label>
+								}
 								<Row>
-									<Col>
-										<FormGroup>
-											<Label for="diaFinal">Dia</Label>
-											<Input 
-												type="select" 
-												name="diaFinal" 
-												id="diaFinal" 
-												value={diaFinal} 
-												onChange={this.ajudadorDeCampo}
-											>
-												<option value='0'>Todos</option>
-												{
-													arrayDias.map(dia => dia)
-												}
-											</Input>
-										</FormGroup>
+									<Col sm="6">
+										<Label><b>Período Inicial</b></Label>
+										<Row>
+											<Col>
+												<FormGroup>
+													<Label for="diaInicial">Dia</Label>
+													<Input 
+														type="select" 
+														name="diaInicial" 
+														id="diaInicial" 
+														value={diaInicial} 
+														onChange={this.ajudadorDeCampo}
+													>
+														<option value='0'>Todos</option>
+														{
+															arrayDias.map(dia => dia)
+														}
+													</Input>
+												</FormGroup>
+											</Col>
+											<Col style={{paddingRight:0, paddingLeft:0}}>
+												<FormGroup>
+													<Label for="mesInicial">Mês</Label>
+													<Input 
+														type="select" 
+														name="mesInicial" 
+														id="mesInicial" 
+														value={mesInicial} 
+														onChange={this.ajudadorDeCampo}
+													>
+														<option value='0'>Todos</option>
+														{
+															arrayMes.map(mes => mes)
+														}
+													</Input>
+												</FormGroup>
+											</Col>
+											<Col>
+												<FormGroup>
+													<Label for="anoInicial">Ano</Label>
+													<Input 
+														type="select" 
+														name="anoInicial" 
+														id="anoInicial" 
+														value={anoInicial} 
+														onChange={this.ajudadorDeCampo}
+													>
+														<option value='0'>Todos</option>
+														{
+															arrayAnos.map(ano => ano)
+														}
+													</Input>
+												</FormGroup>
+											</Col>
+										</Row>
 									</Col>
-									<Col style={{paddingRight:0, paddingLeft:0}}>
-										<FormGroup>
-											<Label for="mesFinal">Mês</Label>
-											<Input 
-												type="select" 
-												name="mesFinal" 
-												id="mesFinal" 
-												value={mesFinal} 
-												onChange={this.ajudadorDeCampo}
-											>
-												<option value='0'>Todos</option>
-												{
-													arrayMes.map(mes => mes)
-												}
-											</Input>
-										</FormGroup>
-									</Col>
-									<Col>
-										<FormGroup>
-											<Label for="anoFinal">Ano</Label>
-											<Input 
-												type="select" 
-												name="anoFinal" 
-												id="anoFinal" 
-												value={anoFinal} 
-												onChange={this.ajudadorDeCampo}
-											>
-												<option value='0'>Todos</option>
-												{
-													arrayAnos.map(ano => ano)
-												}
-											</Input>
-										</FormGroup>
+
+									<Col sm="6">
+										<Label><b>Período Final</b></Label>
+										<Row>
+											<Col>
+												<FormGroup>
+													<Label for="diaFinal">Dia</Label>
+													<Input 
+														type="select" 
+														name="diaFinal" 
+														id="diaFinal" 
+														value={diaFinal} 
+														onChange={this.ajudadorDeCampo}
+													>
+														<option value='0'>Todos</option>
+														{
+															arrayDias.map(dia => dia)
+														}
+													</Input>
+												</FormGroup>
+											</Col>
+											<Col style={{paddingRight:0, paddingLeft:0}}>
+												<FormGroup>
+													<Label for="mesFinal">Mês</Label>
+													<Input 
+														type="select" 
+														name="mesFinal" 
+														id="mesFinal" 
+														value={mesFinal} 
+														onChange={this.ajudadorDeCampo}
+													>
+														<option value='0'>Todos</option>
+														{
+															arrayMes.map(mes => mes)
+														}
+													</Input>
+												</FormGroup>
+											</Col>
+											<Col>
+												<FormGroup>
+													<Label for="anoFinal">Ano</Label>
+													<Input 
+														type="select" 
+														name="anoFinal" 
+														id="anoFinal" 
+														value={anoFinal} 
+														onChange={this.ajudadorDeCampo}
+													>
+														<option value='0'>Todos</option>
+														{
+															arrayAnos.map(ano => ano)
+														}
+													</Input>
+												</FormGroup>
+											</Col>
+										</Row>
 									</Col>
 								</Row>
-								</Col>
-							</Row>
 							</div>
 							{
 								carregando &&
@@ -383,14 +344,56 @@ class Lancamentos extends React.Component {
 							}
 							{
 								!carregando &&
-								lancamentosFiltrados &&
-								lancamentosFiltrados.map(lancamento => 
-									<Lancamento 
-									key={lancamento._id}
-									lancamento_id={lancamento._id} 
-									alternarMostrarAlterarLancamento={this.alternarMostrarAlterarLancamento}
-									/>
-									)
+									lancamentosFiltrados &&
+									<table className="table table-condensed table-striped">
+										<thead>
+											<tr className='text-center'>
+												<th>
+													Dia
+												</th>
+												{
+													empresa_usuario_logado_id === EMPRESA_ADMINISTRACAO_ID &&
+														<th>
+															Empresa
+														</th>
+												}
+												<th>
+													Categoria
+												</th>
+												<th>
+													Dízimos
+												</th>
+												<th>
+													Oferta
+												</th>
+												<th>
+													Soma
+												</th>
+												<th>
+													Recebido
+												</th>
+												<th>
+													Diferença
+												</th>
+												<th>
+													Opções
+												</th>
+											</tr>
+										</thead>
+										<tbody>
+											{
+												lancamentosFiltrados.map(lancamento => {
+													return (
+														<Lancamento 
+															key={lancamento._id}
+															lancamento_id={lancamento._id} 
+															alternarMostrarAlterarLancamento={this.alternarMostrarAlterarLancamento}
+														/>
+													)
+												})
+											}
+										</tbody>
+									</table>
 							}
 						</div>
 				}
@@ -410,7 +413,6 @@ const mapStateToProps = (state, { empresa_id })  => {
 	}
 	return {
 		lancamentos: lancamentos && lancamentos.filter(lancamento => lancamento.data_inativacao === null),
-		categoriaTipo: state.categoriaTipo,
 		categorias: state.categorias,
 		empresas: state.empresas,
 		empresa_usuario_logado_id: usuarioLogado.empresa_id,

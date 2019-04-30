@@ -90,40 +90,40 @@ const mapStateToProps = ({situacoes, usuarioLogado, lancamentos, lancamentoSitua
 	const lancamentosFiltrados = lancamentos && usuarioLogado && 
 		lancamentos.filter(lancamento => lancamento.empresa_id === usuarioLogado.empresa_id)
 
-	lancamentosFiltrados
-		.filter(lancamento => lancamento.data_inativacao === null)
-		.forEach(lancamento => {
-			const lancamentoSituacaoAtiva = lancamentoSituacao && 
-				lancamentoSituacao.find(lancamentoSituacao => lancamento._id === lancamentoSituacao.lancamento_id && lancamentoSituacao.data_inativacao === null)
-
-			if(lancamentoSituacaoAtiva){	
-				const situacaoAtiva = situacoes && 
-					situacoes.find(situacao => lancamentoSituacaoAtiva.situacao_id === situacao._id)
-				const categoriaAtiva = categorias && categorias.find(categoria => lancamento.categoria_id === categoria._id)
-
-
-				if(situacaoAtiva){
-					const valorFormatado = parseFloat(lancamento.valor.toFixed(2))
-					if(situacaoAtiva._id === SITUACAO_RECEBIDO){
-						if(categoriaAtiva.credito_debito === 'C'){
-							saldo += valorFormatado
-						}else{
-							saldo -= valorFormatado
-						}
-					}
-					saldo = parseFloat(saldo.toFixed(2))
-					if(situacaoAtiva._id === SITUACAO_NAO_RECEBIDO){
-						if(categoriaAtiva.credito_debito === 'C'){
-							naoRecebidoCredito += valorFormatado
-						}else{
-							naoRecebidoDebito += valorFormatado
-						}
-						naoRecebidoCredito = parseFloat(naoRecebidoCredito.toFixed(2))
-						naoRecebidoDebito = parseFloat(naoRecebidoDebito.toFixed(2))
-					}
-				}
-			}
-		})
+	//	lancamentosFiltrados
+	//		.filter(lancamento => lancamento.data_inativacao === null)
+	//		.forEach(lancamento => {
+	//			const lancamentoSituacaoAtiva = lancamentoSituacao && 
+	//				lancamentoSituacao.find(lancamentoSituacao => lancamento._id === lancamentoSituacao.lancamento_id && lancamentoSituacao.data_inativacao === null)
+	//
+	//			if(lancamentoSituacaoAtiva){	
+	//				const situacaoAtiva = situacoes && 
+	//					situacoes.find(situacao => lancamentoSituacaoAtiva.situacao_id === situacao._id)
+	//				const categoriaAtiva = categorias && categorias.find(categoria => lancamento.categoria_id === categoria._id)
+	//
+	//
+	//				if(situacaoAtiva){
+	//					const valorFormatado = parseFloat(lancamento.valor.toFixed(2))
+	//					if(situacaoAtiva._id === SITUACAO_RECEBIDO){
+	//						if(categoriaAtiva.credito_debito === 'C'){
+	//							saldo += valorFormatado
+	//						}else{
+	//							saldo -= valorFormatado
+	//						}
+	//					}
+	//					saldo = parseFloat(saldo.toFixed(2))
+	//					if(situacaoAtiva._id === SITUACAO_NAO_RECEBIDO){
+	//						if(categoriaAtiva.credito_debito === 'C'){
+	//							naoRecebidoCredito += valorFormatado
+	//						}else{
+	//							naoRecebidoDebito += valorFormatado
+	//						}
+	//						naoRecebidoCredito = parseFloat(naoRecebidoCredito.toFixed(2))
+	//						naoRecebidoDebito = parseFloat(naoRecebidoDebito.toFixed(2))
+	//					}
+	//				}
+	//			}
+	//		})
 
 	return {
 		saldo,

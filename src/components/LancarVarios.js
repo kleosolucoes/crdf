@@ -110,7 +110,7 @@ class LancarVarios extends React.Component {
 				elemento.empresa_id = usuarioLogado.empresa_id
 
 				if(indiceLancamento === 1){
-					if(dinheiroDizimo || dinheiroOferta){
+					if(parseInt(dinheiroDizimo) !== 0 || parseInt(dinheiroOferta) !== 0){
 						elemento.categoria_id = CATEGORIA_DINHEIRO
 						elemento.dizimo = dinheiroDizimo
 						elemento.oferta = dinheiroOferta
@@ -118,7 +118,7 @@ class LancarVarios extends React.Component {
 					}
 				}
 				if(indiceLancamento === 2){
-					if(debitoDizimo || debitoOferta){
+					if(parseInt(debitoDizimo) !== 0 || parseInt(debitoOferta) !== 0){
 						elemento.categoria_id = CATEGORIA_CARTAO_DEBITO
 						elemento.dizimo = debitoDizimo
 						elemento.oferta = debitoOferta
@@ -126,7 +126,7 @@ class LancarVarios extends React.Component {
 					}
 				}
 				if(indiceLancamento === 3){
-					if(creditoDizimo || creditoOferta){
+					if(parseInt(creditoDizimo) !== 0 || parseInt(creditoOferta) !== 0){
 						elemento.categoria_id = CATEGORIA_CARTAO_CREDITO
 						elemento.dizimo = creditoDizimo
 						elemento.oferta = creditoOferta
@@ -134,7 +134,7 @@ class LancarVarios extends React.Component {
 					}
 				}
 				if(indiceLancamento === 4){
-					if(chequeDizimo || chequeOferta){
+					if(parseInt(chequeDizimo) !== 0 || parseInt(chequeOferta) !== 0){
 						elemento.categoria_id = CATEGORIA_CHEQUE
 						elemento.dizimo = chequeDizimo
 						elemento.oferta = chequeOferta

@@ -2,15 +2,12 @@ import React from 'react'
 import {
 	Row,
 	Col,
-	Button,
-	Table,
 	Alert,
 	Card,
 } from 'reactstrap'
 import { connect } from 'react-redux'
 import {
 	DARKGREEN,
-	LIGHTGREEN,
 	LIGHTGRAY,
 	EMPRESA_ADMINISTRACAO_ID,
 	CATEGORIA_DINHEIRO,
@@ -103,7 +100,7 @@ class ExtratoAdministracao extends React.Component {
 									categoria.oferta = '0.00'
 								}
 								return (
-									<Col lg="4" md="6" sm="6" xs="4" key={`categoriaNaoRecebido${categoria._id}`}>
+									<Col lg="6" md="6" sm="6" xs="12" key={`categoriaNaoRecebido${categoria._id}`}>
 
 										<Card
 											onClick={() => this.props.alterarTela('lancamentos', categoria._id)}
@@ -144,44 +141,6 @@ class ExtratoAdministracao extends React.Component {
 							})
 						}
 					</div>
-
-					{/* {<Table>
-						<thead style={{background: LIGHTGREEN, color: '#fff'}}>
-							<tr>
-								<th>Categoria</th>
-								<th style={{paddingRight: 30, paddingLeft: 30, verticalAlign: 'middle'}}>Soma</th>
-							</tr>
-						</thead>
-						{
-							!carregando && 
-							listaDeNaoRecebidoPorCategoria&&
-								listaDeNaoRecebidoPorCategoria.map(categoria => {
-									if(categoria.dizimo === 0){
-										categoria.dizimo = '0.00'
-									}
-									if(categoria.oferta === 0){
-										categoria.oferta = '0.00'
-									}
-									return (
-										<tbody key={`categoriaNaoRecebido${categoria._id}`}>
-											<tr>
-												<td>
-													<Button className="botaoTipoCategoria"
-														onClick={() => this.props.alterarTela('lancamentos', categoria._id)}
-														style={{textAlign: 'left'}}
-													>
-														{categoria.nome}
-													</Button>
-												</td>
-												<td>
-													R$ {Number(categoria.soma).toFixed(2)}
-												</td>
-											</tr>
-										</tbody>
-									)
-								})
-						}
-					</Table> } */}
 				</div>
 			</div>
 		)
@@ -199,7 +158,14 @@ const mapStateToProps = ({ usuarioLogado, lancamentos, categorias }) => {
 		categorias
 		&& lancamentos
 	) {
-		listaDeNaoRecebidoPorCategoria = categorias.map(categoria => {
+		listaDeNaoRecebidoPorCategoria = 
+			categorias
+			.filter(categoria => 
+				categoria._id === CATEGORIA_DINHEIRO ||
+				categoria._id === CATEGORIA_CARTAO_CREDITO ||
+				categoria._id === CATEGORIA_CARTAO_DEBITO ||
+				categoria._id === CATEGORIA_CHEQUE)
+			.map(categoria => {
 			categoria.soma = 0.00
 			return categoria
 		})

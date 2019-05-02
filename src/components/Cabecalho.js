@@ -12,8 +12,9 @@ import {
 import { connect } from 'react-redux'
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faUserPlus } from '@fortawesome/free-solid-svg-icons'
+import { faUserPlus, faSyncAlt } from '@fortawesome/free-solid-svg-icons'
 library.add(faUserPlus)
+library.add(faSyncAlt)
 
 export const Cabecalho = ({ nomePagina }) => (
 	<Row

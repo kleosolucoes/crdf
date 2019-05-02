@@ -9,7 +9,7 @@
 
 // To learn more about the benefits of this model and instructions on how to
 // opt-in, read http://bit.ly/CRA-PWA
-//import firebase from 'firebase';
+import firebase from 'firebase';
 
 const isLocalhost = Boolean(
 	window.location.hostname === 'localhost' ||
@@ -60,7 +60,7 @@ function registerValidSW(swUrl, config) {
 	navigator.serviceWorker
 		.register(swUrl)
 		.then(registration => {
-			//firebase.messaging().useServiceWorker(registration);
+			firebase.messaging().useServiceWorker(registration);
 			registration.onupdatefound = () => {
 				const installingWorker = registration.installing;
 				if (installingWorker == null) {

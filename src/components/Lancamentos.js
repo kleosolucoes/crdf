@@ -13,7 +13,6 @@ import {
 } from 'reactstrap'
 import { EMPRESA_ADMINISTRACAO_ID, DARKGREEN, LIGHTGREEN, LIGHTGRAY } from '../helpers/constantes'
 import { Cabecalho } from './Cabecalho';
-import Responsive from 'react-responsive';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
 class Lancamentos extends React.Component {
@@ -65,7 +64,6 @@ class Lancamentos extends React.Component {
 	})
 
 	render() {
-		const Desktop = props => <Responsive {...props} minWidth={992} />;
 		const {
 			lancamentos,
 			categorias,
@@ -156,7 +154,7 @@ class Lancamentos extends React.Component {
 								onClick={this.atualizar}
 								style={{ height: 40, width: 40, background: 'transparent', color: DARKGREEN, margin: 5, border: 0 }}
 							>
-								<FontAwesomeIcon icon="sync-alt" size="sm" />
+								<FontAwesomeIcon icon="sync-alt" size="sm" color={{DARKGREEN}} />
 							</Button>
 						</Row>
 						<div className="container-lancamentos">

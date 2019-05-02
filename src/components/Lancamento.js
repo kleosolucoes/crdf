@@ -61,6 +61,15 @@ class Lancamento extends React.Component {
 		if (lancamento.recebido) {
 			diferenca = lancamento.recebido - soma
 		}
+
+		let mostrarAlterar = false
+		if(usuarioLogado.empresa_id === EMPRESA_ADMINISTRACAO_ID){
+			mostrarAlterar = true
+		}
+		if(usuarioLogado.empresa_id !== EMPRESA_ADMINISTRACAO_ID &&
+			!lancamento.recebido){
+			mostrarAlterar = true
+		}
 		return (
 			<tr className='text-center'>
 				<td> {lancamento.data} </td>
@@ -93,15 +102,14 @@ class Lancamento extends React.Component {
 				</td>
 				<td>
 					{
-						!lancamento.recebido &&
-						usuarioLogado.empresa_id === EMPRESA_ADMINISTRACAO_ID &&
-						<Button
-							className="botao-editar"
-							style={{ width: '100%' }}
-							onClick={() => this.props.alternarMostrarAlterarLancamento(lancamento._id)}
-						>
-							<FontAwesomeIcon icon="edit" size="sm" />
-						</Button>
+						mostrarAlterar &&
+							<Button
+								className="botao-lancar"
+								style={{ width: '100%' }}
+								onClick={() => this.props.alternarMostrarAlterarLancamento(lancamento._id)}
+							>
+								<FontAwesomeIcon icon="edit" size="sm" />
+							</Button>
 					}
 				</td>
 			</tr>

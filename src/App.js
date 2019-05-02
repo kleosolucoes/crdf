@@ -29,7 +29,7 @@ import {
 	pegarContaFixaDaApi,
 	pegarLancamentoDaApi,
 } from './actions'
-//import firebase from 'firebase'
+import firebase from 'firebase'
 
 class App extends React.Component {
 

@@ -44,14 +44,17 @@ class LancarUm extends React.Component {
 			lancamento
 		} = this.props
 
-		if(lancamento.recebido){
-			this.setState({recebido: Number(lancamento.recebido).toFixed(2)})
-		}
-		if(lancamento.dizimo){
-			this.setState({dizimo: Number(lancamento.dizimo).toFixed(2)})
-		}
-		if(lancamento.oferta){
-			this.setState({oferta: Number(lancamento.oferta).toFixed(2)})
+		if(lancamento){
+
+			if(lancamento.recebido){
+				this.setState({recebido: Number(lancamento.recebido).toFixed(2)})
+			}
+			if(lancamento.dizimo){
+				this.setState({dizimo: Number(lancamento.dizimo).toFixed(2)})
+			}
+			if(lancamento.oferta){
+				this.setState({oferta: Number(lancamento.oferta).toFixed(2)})
+			}
 		}
 	}
 

@@ -61,11 +61,11 @@ class Lancamento extends React.Component {
 		}
 
 		let mostrarAlterar = false
-		if(usuarioLogado.empresa_id === EMPRESA_ADMINISTRACAO_ID){
+		if (usuarioLogado.empresa_id === EMPRESA_ADMINISTRACAO_ID) {
 			mostrarAlterar = true
 		}
-		if(usuarioLogado.empresa_id !== EMPRESA_ADMINISTRACAO_ID &&
-			!lancamento.recebido){
+		if (usuarioLogado.empresa_id !== EMPRESA_ADMINISTRACAO_ID &&
+			!lancamento.recebido) {
 			mostrarAlterar = true
 		}
 		return (
@@ -99,13 +99,13 @@ class Lancamento extends React.Component {
 				<td>
 					{
 						mostrarAlterar &&
-							<Button
-								className="botao-lancar"
-								style={{ width: '100%' }}
-								onClick={() => this.props.alternarMostrarAlterarLancamento(lancamento._id)}
-							>
-								<FontAwesomeIcon icon="edit" size="sm" />
-							</Button>
+						<Button
+							className="botao-editar"
+							style={{ width: '100%' }}
+							onClick={() => this.props.alternarMostrarAlterarLancamento(lancamento._id)}
+						>
+							<FontAwesomeIcon icon="edit" size="sm" />
+						</Button>
 					}
 				</td>
 			</tr>

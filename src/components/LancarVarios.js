@@ -17,9 +17,6 @@ import {
 	CATEGORIA_CARTAO_DEBITO,
 	CATEGORIA_CARTAO_CREDITO,
 	CATEGORIA_CHEQUE,
-	LIGHTGRAY,
-	LIGHTGREEN,
-	DARKGREEN,
 } from '../helpers/constantes'
 
 class LancarVarios extends React.Component {

@@ -285,7 +285,7 @@ class LancarUm extends React.Component {
 										<p>
 											<Badge style={{padding: 5, background: DARKGREEN}}>
 												{
-													lancamento.oferta ? Number(lancamento.oferta).toFixed(2) : 0.00
+													lancamento.oferta ? `${Number(lancamento.oferta).toFixed(2)}` : `R$ ${0.00}`
 												}
 											</Badge>
 										</p>

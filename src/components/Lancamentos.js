@@ -11,7 +11,7 @@ import {
 	Alert,
 	Button,
 } from 'reactstrap'
-import { EMPRESA_ADMINISTRACAO_ID, DARKGREEN } from '../helpers/constantes'
+import { EMPRESA_ADMINISTRACAO_ID, DARKGREEN, LIGHTGREEN, LIGHTGRAY } from '../helpers/constantes'
 import { Cabecalho } from './Cabecalho';
 import Responsive from 'react-responsive';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -161,35 +161,6 @@ class Lancamentos extends React.Component {
 						</Row>
 						<div className="container-lancamentos">
 							<h5>Filtro</h5>
-							<Row>
-								<Col>
-									<FormGroup>
-										<Label for="categoria_id">Categoria</Label>
-										<Input
-											type="select"
-											name="categoria_id"
-											id="categoria_id"
-											value={categoria_id}
-											onChange={this.ajudadorDeCampo}
-										>
-											<option value='0'>Todas</option>
-											{
-												categoriasFiltradas &&
-												categoriasFiltradas.map(categoria => {
-													return (
-														<option
-															key={categoria._id}
-															value={categoria._id}
-														>
-															{categoria.nome}
-														</option>
-													)
-												})
-											}
-										</Input>
-									</FormGroup>
-								</Col>
-							</Row>
 							{
 								empresa_usuario_logado_id === EMPRESA_ADMINISTRACAO_ID &&
 								<Row>
@@ -222,6 +193,36 @@ class Lancamentos extends React.Component {
 									</Col>
 								</Row>
 							}
+							<Row>
+								<Col>
+									<FormGroup>
+										<Label for="categoria_id">Categoria</Label>
+										<Input
+											type="select"
+											name="categoria_id"
+											id="categoria_id"
+											value={categoria_id}
+											onChange={this.ajudadorDeCampo}
+										>
+											<option value='0'>Todas</option>
+											{
+												categoriasFiltradas &&
+												categoriasFiltradas.map(categoria => {
+													return (
+														<option
+															key={categoria._id}
+															value={categoria._id}
+														>
+															{categoria.nome}
+														</option>
+													)
+												})
+											}
+										</Input>
+									</FormGroup>
+								</Col>
+							</Row>
+							
 							<Row>
 								<Col sm="6">
 									<Label><b>Período Inicial</b></Label>
@@ -348,17 +349,15 @@ class Lancamentos extends React.Component {
 							!carregando &&
 							lancamentosFiltrados &&
 							<table className="table table-condensed table-striped">
-								<thead>
+								<thead style={{background: LIGHTGREEN, color: LIGHTGRAY}}>
 									<tr className='text-center'>
 										<th> Dia </th>
 										{ empresa_usuario_logado_id === EMPRESA_ADMINISTRACAO_ID &&
 											<th> Empresa </th>
 										}
 										<th> Categoria </th>
-										<Desktop>
-											<th> Dízimos </th>
-											<th> Oferta </th>
-										</Desktop>
+										<th> Dízimos </th>
+										<th> Oferta </th>
 										<th> Soma </th>
 										<th> Recebido </th>
 										<th> Diferença </th>

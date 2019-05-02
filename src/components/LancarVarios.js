@@ -17,6 +17,9 @@ import {
 	CATEGORIA_CARTAO_DEBITO,
 	CATEGORIA_CARTAO_CREDITO,
 	CATEGORIA_CHEQUE,
+	LIGHTGRAY,
+	LIGHTGREEN,
+	DARKGREEN,
 } from '../helpers/constantes'
 
 class LancarVarios extends React.Component {
@@ -377,17 +380,18 @@ class LancarVarios extends React.Component {
 			</FormGroup>
 		</Col>
 	</Row>
+		<p style={{color: '#aaa'}}>* Necessário apenas lançar valores, não necessita inserir pontuações (, .).</p>
 	{
 		tiposDeLancamentos.map(tipoDeLancamento => (
 			<div className="container-item" key={tipoDeLancamento.label}>
-				<div style={{padding:10}}>
-					<Row style={{justifyContent: 'center', paddingBottom: 10, paddingTop: 5}}>
-						<h6><b>{tipoDeLancamento.label}</b></h6>
+				<div>
+					<Row className="header-categoria">
+						<h6 style={{margin: 0}}><b>{tipoDeLancamento.label}</b></h6>
 					</Row>
 					{
 						tipoDeLancamento.campos.map(campo => (
-							<Row key={campo.name}>
-								<Col>
+							<Row style={{padding:'0px 10px'}} key={campo.name}>
+								<Col style={{display: 'flex', alignItems: 'center'}}>
 									{campo.label}
 								</Col>
 								<Col>
@@ -403,9 +407,9 @@ class LancarVarios extends React.Component {
 					}
 				</div>
 				<div className="total-categoria-lancado">
-					<Row>
-						<Col style={{paddingRight: 0, paddingLeft: 0}}> <b>TOTAL {tipoDeLancamento.labelTotal}</b> </Col>
-						<Col> <b>{tipoDeLancamento.total}</b> </Col>
+					<Row style={{margin: 0}}>
+						<Col style={{paddingRight: 0, paddingLeft: 0}}> TOTAL {tipoDeLancamento.labelTotal} </Col>
+						<Col style={{display: 'flex', alignItems: 'center', justifyContent: 'center'}}> <b> R$ {tipoDeLancamento.total}</b> </Col>
 					</Row>
 				</div>
 			</div>
@@ -422,7 +426,7 @@ class LancarVarios extends React.Component {
 	<div style={{padding: 10, marginTop: 5, marginBottom: 5}}>
 		<Row className="total-lancado">
 			<Col> <b>TOTAL</b> </Col>
-			<Col> <b>{total}</b> </Col>
+			<Col> <b>R$ {total}</b> </Col>
 			<Col>
 				<Button 
 					type='button' 

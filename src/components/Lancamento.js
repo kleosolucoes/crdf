@@ -70,25 +70,25 @@ class Lancamento extends React.Component {
 				<td> {categoria.nome} </td>
 				<Desktop>
 					<td className='text-center'>
-						{lancamento.dizimo ? Number(lancamento.dizimo).toFixed(2) : '0.00'}
+						{lancamento.dizimo ? `R$ ${Number(lancamento.dizimo).toFixed(2)}` : '0.00'}
 					</td>
 					<td className='text-center'>
-						{lancamento.oferta ? Number(lancamento.oferta).toFixed(2) : '0.00'}
+						{lancamento.oferta ? `R$ ${Number(lancamento.oferta).toFixed(2)}` : '0.00'}
 					</td>
 				</Desktop>
 				<td className='text-center'>
-					{soma ? Number(soma).toFixed(2) : '0.00'}
+					{soma ? `R$ ${Number(soma).toFixed(2)}` : '0.00'}
 				</td>
 				<td className='text-center'>
 					<Badge style={{ padding: 5, }} color={corLinha}>
 						{
-							lancamento.recebido ? Number(lancamento.recebido).toFixed(2) : 'Não Recebido'
+							lancamento.recebido ? `R$ ${Number(lancamento.recebido).toFixed(2)}` : 'Não Recebido'
 						}
 					</Badge>
 				</td>
 				<td className='text-center'>
 					{
-						diferenca ? Number(diferenca).toFixed(2) : ''
+						diferenca ? `R$ ${Number(diferenca).toFixed(2)}` : ''
 					}
 				</td>
 				<td>
@@ -96,7 +96,7 @@ class Lancamento extends React.Component {
 						!lancamento.recebido &&
 						usuarioLogado.empresa_id === EMPRESA_ADMINISTRACAO_ID &&
 						<Button
-							className="botao-lancar"
+							className="botao-editar"
 							style={{ width: '100%' }}
 							onClick={() => this.props.alternarMostrarAlterarLancamento(lancamento._id)}
 						>

@@ -3,8 +3,6 @@ import {
 	Row,
 	Col,
 	Card,
-	CardTitle,
-	CardText,
 	Button,
 } from "reactstrap";
 import { 
@@ -61,7 +59,7 @@ class CabecalhoExtrato extends React.Component {
 		}
 		saldo = Number(saldo).toFixed(2)
 		return (
-			<div style={{background: LIGHTGRAY}}>
+			<div style={{background: LIGHTGRAY, boxShadow: '0 4px 16px rgba(0, 0, 0, 0.08)'}}>
 				<Row style={{justifyContent: 'center', margin: 0}}>
 					<Col> 
 						<h5 style={{padding: 10, fontWeight: '300', color: DARKGREEN}}>Olá, {usuario && usuario.nome.split(' ')[0]}!</h5>
@@ -78,10 +76,13 @@ class CabecalhoExtrato extends React.Component {
 
 					<Col sm="12" lg="12">
 						<Card className="card-saldo">
-							<CardTitle> 
-								<span style={{color: corSaldo}}> R$ {saldo}</span>
-							</CardTitle>
-							<CardText style={{fontSize: 12}}>Saldo</CardText>
+							<div style={{
+								display: 'flex', flexDirection: "column", flex: 1,
+								alignItems: 'center', justifyContent: 'center', paddingRight: 5,
+							}}>
+								<span style={{color: corSaldo, fontSize: 18}}> R$ {saldo}</span>
+								<span style={{fontWeight: '300', fontSize: 14}}>Saldo</span>
+							</div>
 						</Card> 
 					</Col>
 

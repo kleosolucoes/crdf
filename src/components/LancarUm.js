@@ -135,7 +135,9 @@ class LancarUm extends React.Component {
 			})
 
 			let elemento = {}
-			elemento.quem_recebeu_id = this.props.usuario_id
+			if(usuarioLogado.empresa_id === EMPRESA_ADMINISTRACAO_ID){
+				elemento.quem_recebeu_id = this.props.usuario_id
+			}
 			elemento.recebido = recebido
 			elemento.dizimo = dizimo
 			elemento.oferta = oferta

@@ -8,7 +8,6 @@ import {
 	EMPRESA_ADMINISTRACAO_ID,
 } from '../helpers/constantes'
 import { removerLancamentoNaApi } from '../actions'
-import Responsive from 'react-responsive';
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faExpandArrowsAlt, faEdit } from '@fortawesome/free-solid-svg-icons'
@@ -40,7 +39,6 @@ class Lancamento extends React.Component {
 	}
 
 	render() {
-		const Desktop = props => <Responsive {...props} minWidth={992} />;
 		const {
 			lancamento,
 			categoria,
@@ -77,14 +75,12 @@ class Lancamento extends React.Component {
 					<td> {empresa.nome} </td>
 				}
 				<td> {categoria.nome} </td>
-				<Desktop>
-					<td className='text-center'>
-						{lancamento.dizimo ? `R$ ${Number(lancamento.dizimo).toFixed(2)}` : '0.00'}
-					</td>
-					<td className='text-center'>
-						{lancamento.oferta ? `R$ ${Number(lancamento.oferta).toFixed(2)}` : '0.00'}
-					</td>
-				</Desktop>
+				<td className='text-center'>
+					{lancamento.dizimo ? `R$ ${Number(lancamento.dizimo).toFixed(2)}` : '0.00'}
+				</td>
+				<td className='text-center'>
+					{lancamento.oferta ? `R$ ${Number(lancamento.oferta).toFixed(2)}` : '0.00'}
+				</td>
 				<td className='text-center'>
 					{soma ? `R$ ${Number(soma).toFixed(2)}` : '0.00'}
 				</td>

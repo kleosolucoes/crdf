@@ -13,7 +13,8 @@ import { connect } from 'react-redux'
 import { 
 	STRING_DEBITO,
 	STRING_CREDITO,
-	DARKGREEN
+	DARKGREEN,
+	EMPRESA_ADMINISTRACAO_ID,
 } from '../helpers/constantes'
 import { formatReal, getMoney, pegarDataEHoraAtual } from '../helpers/funcoes'
 import { 
@@ -31,16 +32,36 @@ class LancarUm extends React.Component {
 		descricao: '',
 		categoria_id: 0,
 		empresa_id: 0,
+		dizimo: '0.00',
+		oferta: '0.00',
 		recebido: '0.00',
 		mostrarMensagemDeErro: false,
 		camposComErro: [],
+	}
+
+	componentDidMount(){
+		const {
+			lancamento
+		} = this.props
+
+		if(lancamento.recebido){
+			this.setState({recebido: Number(lancamento.recebido).toFixed(2)})
+		}
+		if(lancamento.dizimo){
+			this.setState({dizimo: Number(lancamento.dizimo).toFixed(2)})
+		}
+		if(lancamento.oferta){
+			this.setState({oferta: Number(lancamento.oferta).toFixed(2)})
+		}
 	}
 
 	ajudadorDeCampo = event => {
 		let valor = event.target.value
 		const name = event.target.name
 
-		if(name === 'recebido'){
+		if(name === 'recebido'
+			|| name === 'dizimo'
+			|| name === 'oferta'){
 			const valorInteiro = getMoney(valor) + ''
 			const valorComZerosAEsquerda = valorInteiro.padStart(3, '0')
 			valor = formatReal(valorComZerosAEsquerda)
@@ -53,6 +74,8 @@ class LancarUm extends React.Component {
 			categoria_id,
 			empresa_id,
 			recebido,
+			dizimo,
+			oferta,
 			dia,
 			mes,
 			ano,
@@ -64,6 +87,7 @@ class LancarUm extends React.Component {
 		} = this.state
 		let {
 			lancamento,
+			usuarioLogado,
 		} = this.props
 		camposComErro = []
 
@@ -92,9 +116,11 @@ class LancarUm extends React.Component {
 			}
 		}
 
-		if(isNaN(recebido) || recebido === '' || recebido === '0.00'){
-			mostrarMensagemDeErro = true
-			camposComErro.push('recebido')
+		if(usuarioLogado.empresa_id === EMPRESA_ADMINISTRACAO_ID){
+			if(isNaN(recebido) || recebido === '' || recebido === '0.00'){
+				mostrarMensagemDeErro = true
+				camposComErro.push('recebido')
+			}
 		}
 
 		if(mostrarMensagemDeErro){
@@ -111,6 +137,8 @@ class LancarUm extends React.Component {
 			let elemento = {}
 			elemento.quem_recebeu_id = this.props.usuario_id
 			elemento.recebido = recebido
+			elemento.dizimo = dizimo
+			elemento.oferta = oferta
 			if(lancamento){
 				elemento.lancamento_id = lancamento._id
 				this.props.alterarLancamentoNaApi(elemento, this.props.token)
@@ -141,6 +169,7 @@ class LancarUm extends React.Component {
 			lancamento,
 			categoria,
 			empresa,
+			usuarioLogado,
 		} = this.props
 		const {
 			mostrarMensagemDeErro,
@@ -150,6 +179,8 @@ class LancarUm extends React.Component {
 			ano,
 			descricao,
 			recebido,
+			dizimo,
+			oferta,
 			categoria_id,
 			empresa_id,
 		} = this.state
@@ -170,7 +201,7 @@ class LancarUm extends React.Component {
 
 		return (
 			<div style={{marginTop: 70}}>
-			 	<Cabecalho 
+				<Cabecalho 
 					nomePagina="Lançar entrada"
 				/>
 				<div className="container-lancar-um">
@@ -204,8 +235,8 @@ class LancarUm extends React.Component {
 														})
 												}
 											</Input>
-											{camposComErro.includes('empresa_id') && <Alert color='danger'>Selecione a Empresa</Alert>}
-										</div>
+										{camposComErro.includes('empresa_id') && <Alert color='danger'>Selecione a Empresa</Alert>}
+									</div>
 								}
 								{
 									lancamento && 
@@ -237,7 +268,7 @@ class LancarUm extends React.Component {
 													categorias &&
 														categorias.map(categoria => {
 															// const cat = _.orderBy(categorias, ["nome"]);
-									 						// console.log(cat)		
+															// console.log(cat)		
 															return (
 																<option 
 																	key={categoria._id}
@@ -249,17 +280,17 @@ class LancarUm extends React.Component {
 														})
 												}
 											</Input>
-											{camposComErro.includes('categoria_id') && <Alert color='danger'>Selecione a Categoria</Alert>}
-										</div>
+										{camposComErro.includes('categoria_id') && <Alert color='danger'>Selecione a Categoria</Alert>}
+									</div>
 								}
 								{
 									lancamento && 
-										categoria &&
-											<p>
-												<Badge style={{padding: 5, background: DARKGREEN}}>
-													{categoria.nome}
-												</Badge>
-											</p>
+									categoria &&
+										<p>
+											<Badge style={{padding: 5, background: DARKGREEN}}>
+												{categoria.nome}
+											</Badge>
+										</p>
 								}
 							</FormGroup>
 						</Col>
@@ -270,112 +301,142 @@ class LancarUm extends React.Component {
 								<Col>
 									<FormGroup>
 										<Label for="valor">Dízimo</Label>
-										<p>
-											<Badge style={{padding: 5, background: DARKGREEN}}>
-												{
-													lancamento.dizimo ? Number(lancamento.dizimo).toFixed(2) : 0.00
-												}
-											</Badge>
-										</p>
+										{
+											usuarioLogado.empresa_id === EMPRESA_ADMINISTRACAO_ID &&
+												<p>
+													<Badge style={{padding: 5, background: DARKGREEN}}>
+														{
+															lancamento.dizimo ? Number(lancamento.dizimo).toFixed(2) : 0.00
+														}
+													</Badge>
+												</p>
+										}
+										{
+											usuarioLogado.empresa_id !== EMPRESA_ADMINISTRACAO_ID &&
+												<Input 
+													type="number" 
+													name="dizimo" 
+													id="dizimo" 
+													value={dizimo} 
+													onChange={this.ajudadorDeCampo}
+												/>
+										}
 									</FormGroup>
 								</Col>
 								<Col>
 									<FormGroup>
 										<Label for="valor">Oferta</Label>
-										<p>
-											<Badge style={{padding: 5, background: DARKGREEN}}>
-												{
-													lancamento.oferta ? Number(lancamento.oferta).toFixed(2) : 0.00
-												}
-											</Badge>
-										</p>
+										{
+											usuarioLogado.empresa_id === EMPRESA_ADMINISTRACAO_ID &&
+
+												<p>
+													<Badge style={{padding: 5, background: DARKGREEN}}>
+														{
+															lancamento.oferta ? Number(lancamento.oferta).toFixed(2) : 0.00
+														}
+													</Badge>
+												</p>
+										}
+										{
+											usuarioLogado.empresa_id !== EMPRESA_ADMINISTRACAO_ID &&
+												<Input 
+													type="number" 
+													name="oferta" 
+													id="oferta" 
+													value={oferta} 
+													onChange={this.ajudadorDeCampo}
+												/>
+										}
 									</FormGroup>
 								</Col>
 							</Row>
 					}
-					<Row>
-						<Col>
-							<FormGroup>
-								<Label for="recebido">Recebido</Label>
-								<Input 
-									type="number" 
-									name="recebido" 
-									id="recebido" 
-									value={recebido} 
-									onChange={this.ajudadorDeCampo}
-									invalid={camposComErro.includes('recebido') ? true : null}
-								>
-								</Input>
-								{camposComErro.includes('recebido') && <Alert color='danger'>Preencha o Valor Recebido</Alert>}
-							</FormGroup>
-						</Col>
-					</Row>
+					{
+						usuarioLogado.empresa_id === EMPRESA_ADMINISTRACAO_ID &&
+							<Row>
+								<Col>
+									<FormGroup>
+										<Label for="recebido">Recebido</Label>
+										<Input 
+											type="number" 
+											name="recebido" 
+											id="recebido" 
+											value={recebido} 
+											onChange={this.ajudadorDeCampo}
+											invalid={camposComErro.includes('recebido') ? true : null}
+										>
+										</Input>
+									{camposComErro.includes('recebido') && <Alert color='danger'>Preencha o Valor Recebido</Alert>}
+								</FormGroup>
+							</Col>
+						</Row>
+					}
 				</div>
 				<div className="container-lancar-um" style={{marginTop: 10}}>
 					{
 						!lancamento &&
-							<div>
-								<Label for="data">DATA DE LANÇAMENTO</Label>
-								<Row>
-									<Col style={{paddingRight: 5}}>
-										<FormGroup>
-											<Label for="dia">* Dia:</Label>
-											<Input 
-												type="select" 
-												name="dia" 
-												id="dia" 
-												value={dia} 
-												onChange={this.ajudadorDeCampo}
-												invalid={camposComErro.includes('dia') ? true : null}
-											>
-												<option value='0'>Selecione</option>
-												{
-													arrayDias.map(dia => dia)
-												}
-											</Input>
-											{camposComErro.includes('dia') && <Alert color='danger'>Selecione o Dia</Alert>}
-										</FormGroup>
-									</Col>
-									<Col style={{padding: 0}}>
-										<FormGroup>
-											<Label for="mes">* Mês:</Label>
-											<Input 
-												type="select" 
-												name="mes" 
-												id="mes" 
-												value={mes} 
-												onChange={this.ajudadorDeCampo}
-												invalid={camposComErro.includes('mes') ? true : null}
-											>
-												<option value='0'>Selecione</option>
-												{
-													arrayMes.map(mes => mes)
-												}
-											</Input>
-											{camposComErro.includes('mes') && <Alert color='danger'>Selecione o Mês</Alert>}
-										</FormGroup>
-									</Col>
-									<Col style={{paddingLeft: 5}}>
-										<FormGroup>
-											<Label for="ano">* Ano:</Label>
-											<Input 
-												type="select" 
-												name="ano" 
-												id="ano" 
-												value={ano} 
-												onChange={this.ajudadorDeCampo}
-												invalid={camposComErro.includes('ano') ? true : null}
-											>
-												<option value='0'>Selecione</option>
-												{
-													arrayAnos.map(ano => ano)
-												}
-											</Input>
-											{camposComErro.includes('ano') && <Alert color='danger'>Selecione o Ano</Alert>}
-										</FormGroup>
-									</Col>
-								</Row>
-							</div>
+						<div>
+							<Label for="data">DATA DE LANÇAMENTO</Label>
+							<Row>
+								<Col style={{paddingRight: 5}}>
+									<FormGroup>
+										<Label for="dia">* Dia:</Label>
+										<Input 
+											type="select" 
+											name="dia" 
+											id="dia" 
+											value={dia} 
+											onChange={this.ajudadorDeCampo}
+											invalid={camposComErro.includes('dia') ? true : null}
+										>
+											<option value='0'>Selecione</option>
+											{
+												arrayDias.map(dia => dia)
+											}
+										</Input>
+									{camposComErro.includes('dia') && <Alert color='danger'>Selecione o Dia</Alert>}
+								</FormGroup>
+							</Col>
+							<Col style={{padding: 0}}>
+								<FormGroup>
+									<Label for="mes">* Mês:</Label>
+									<Input 
+										type="select" 
+										name="mes" 
+										id="mes" 
+										value={mes} 
+										onChange={this.ajudadorDeCampo}
+										invalid={camposComErro.includes('mes') ? true : null}
+									>
+										<option value='0'>Selecione</option>
+										{
+											arrayMes.map(mes => mes)
+										}
+									</Input>
+								{camposComErro.includes('mes') && <Alert color='danger'>Selecione o Mês</Alert>}
+							</FormGroup>
+						</Col>
+						<Col style={{paddingLeft: 5}}>
+							<FormGroup>
+								<Label for="ano">* Ano:</Label>
+								<Input 
+									type="select" 
+									name="ano" 
+									id="ano" 
+									value={ano} 
+									onChange={this.ajudadorDeCampo}
+									invalid={camposComErro.includes('ano') ? true : null}
+								>
+									<option value='0'>Selecione</option>
+									{
+										arrayAnos.map(ano => ano)
+									}
+								</Input>
+							{camposComErro.includes('ano') && <Alert color='danger'>Selecione o Ano</Alert>}
+						</FormGroup>
+					</Col>
+				</Row>
+			</div>
 					}
 					{
 						!lancamento &&
@@ -412,14 +473,14 @@ class LancarUm extends React.Component {
 								<b>Voltar</b>
 							</Button>
 						}
-							<Button
-								type='button' 
-								className="botao-lancar"
-								style={{marginLeft: 5}}
-								onClick={this.ajudadorDeSubmissao}
-							>
-								<b>Salvar</b>
-							</Button>
+						<Button
+							type='button' 
+							className="botao-lancar"
+							style={{marginLeft: 5}}
+							onClick={this.ajudadorDeSubmissao}
+						>
+							<b>Salvar</b>
+						</Button>
 					</Row>
 				</div>
 			</div>
@@ -448,6 +509,7 @@ const mapStateToProps = ({categorias, empresas, usuarioLogado, lancamentos,}, {l
 		lancamento: lancamentoSelecionado,
 		categoria: categoriaSelecionada,
 		empresa: empresaSelecionada,
+		usuarioLogado,
 	}
 }
 

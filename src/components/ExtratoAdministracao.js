@@ -107,7 +107,7 @@ class ExtratoAdministracao extends React.Component {
 											style={{
 												flexDirection: "row", height: 100, 
 												borderWidth: 0, marginTop: 5, backgroundColor: LIGHTGRAY,
-												boxShadow: '0 4px 16px rgba(0, 0, 0, 0.08)', 
+												boxShadow: '0 4px 16px rgba(0, 0, 0, 0.08)', cursor: 'pointer'
 											}}
 										>
 											<div style={{

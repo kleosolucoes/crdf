@@ -56,7 +56,7 @@ class Lancamento extends React.Component {
 		}
 		const soma = lancamento.dizimo + lancamento.oferta
 		let diferenca = null
-		if (lancamento.recebido) {
+		if (lancamento.recebido && (lancamento.dizimo || lancamento.oferta)) {
 			diferenca = lancamento.recebido - soma
 		}
 

@@ -54,23 +54,6 @@
   border: none !important;
   /* box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08); */
 }
-.container-menu-empresa {
-  margin-top: 30px;
-}
-.card-menu {
-  align-items: center;
-  text-align: center;
-  height: 90px;
-  justify-content: space-around;
-  background: #f9f7f7 !important;
-  color: #2f8c7c !important;
-  border: none !important;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
-  cursor: pointer;
-}
-.container-menu-administracao {
-  margin-top: 30px;
-}
 
 /* LANÇAMENTO */
 .container-item {
@@ -81,15 +64,6 @@
   background: #f9f7f7 !important;
   color: #2f8c7c !important;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
-}
-.container-item-meio {
-  margin: 15px 0px;
-  align-items: center;
-  /* padding: 10px; */
-  border-radius: 4px;
-  background: #c7ede6 !important;
-  color: #2f8c7c !important;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
 }
 .container-lancar-um {
   padding: 10px;
@@ -106,14 +80,6 @@
   background: #f9f7f7 !important;
   color: #2f8c7c !important;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
-}
-.total-categoria-lancado-meio {
-  text-align: center;
-  align-items: center;
-  background: #f9f7f7 !important;
-  color: #2f8c7c !important;
-  margin-top: 10px;
-  padding: 10px;
 }
 .botao-lancar {
   /* width: 100%; */
@@ -139,54 +105,11 @@
   color: white !important;
 }
 
-/* USUARIO */
-.container-usuario {
-  margin-top: 15px;
-  border-radius: 4px;
-  background: #f9f7f7 !important;
-  color: #2f8c7c !important;
-  border: 1px solid #ddd !important;
-  /* box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12); */
-}
-
-/* CATEGORIAS */
-.container-categoria {
-  margin-top: 10px;
-  padding: 5px;
-  border-radius: 4px;
-  background: #f9f7f7 !important;
-  color: #2f8c7c !important;
-  border: 1px solid #ddd !important;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
-}
-.col-style {
-  padding: 0px 5px !important;
-  display: flex;
-  align-items: center;
-}
-
 /* LANÇAMENTOS */
-.botao-acao {
-  width: 25px !important;
-  height: 25px !important;
-  background: transparent !important;
-  color: #2f8c7c !important;
-  border: none !important;
-  padding: 0 !important;
-  border-radius: 0 !important;
-  border-radius: 4px !important;
-}
 .container-lancamentos {
   padding: 5px;
   border-radius: 4px;
   background: #f9f7f7 !important;
-  color: #2f8c7c !important;
-}
-
-/* EXTRATO ADMINISTRACAO */
-.botaoTipoCategoria {
-  background: transparent !important;
-  border: none !important;
   color: #2f8c7c !important;
 }
 
@@ -207,6 +130,6 @@
   margin-top: 10px;
   padding: 10px;
 
-  background: #7CC9BC !important;
+  background: #aaa !important;
   color: #f9f7f7 !important;
 }

@@ -102,7 +102,7 @@ function mapStateToProps({usuarioLogado}){
 			})
 		}else{
 			listaDoMenu.push({
-				componente: 'extratoEmpresa',
+				componente: 'extratoAdministracao',
 				label: 'Principal',
 			})
 			listaDoMenu.push({

@@ -71,27 +71,28 @@ class Lancamento extends React.Component {
 		return (
 			<tr className='text-center'>
 				<td> {lancamento.data} </td>
-				{usuarioLogado.empresa_id === EMPRESA_ADMINISTRACAO_ID &&
+				{
+					usuarioLogado.empresa_id === EMPRESA_ADMINISTRACAO_ID &&
 					<td> {empresa.nome} </td>
 				}
 				<td> {categoria.nome} </td>
-				<td className='text-center'>
-					{lancamento.dizimo ? `R$ ${Number(lancamento.dizimo).toFixed(2)}` : '0.00'}
+				<td className='text-right'>
+					{lancamento.dizimo ? `R$ ${Number(lancamento.dizimo).toFixed(2)}` : ''}
 				</td>
-				<td className='text-center'>
-					{lancamento.oferta ? `R$ ${Number(lancamento.oferta).toFixed(2)}` : '0.00'}
+				<td className='text-right'>
+					{lancamento.oferta ? `R$ ${Number(lancamento.oferta).toFixed(2)}` : ''}
 				</td>
-				<td className='text-center'>
-					{soma ? `R$ ${Number(soma).toFixed(2)}` : '0.00'}
+				<td className='text-right'>
+					{soma ? `R$ ${Number(soma).toFixed(2)}` : ''}
 				</td>
-				<td className='text-center'>
+				<td className='text-right'>
 					<Badge style={{ padding: 5, }} color={corLinha}>
 						{
 							lancamento.recebido ? `R$ ${Number(lancamento.recebido).toFixed(2)}` : 'Não Recebido'
 						}
 					</Badge>
 				</td>
-				<td className='text-center'>
+				<td className='text-right'>
 					{
 						diferenca ? `R$ ${Number(diferenca).toFixed(2)}` : ''
 					}

@@ -13,8 +13,6 @@ import {
 } from '../actions'
 import {
 	TELA_EXTRATO_ADMINISTRACAO,
-	TELA_EXTRATO_EMPRESA,
-	EMPRESA_ADMINISTRACAO_ID,
 	DARKGREEN,
 } from '../helpers/constantes'
 import logo from '../caixa.png'
@@ -86,10 +84,7 @@ class Login extends React.Component {
 						})
 					}
 					if(dados.ok){
-						let tela = TELA_EXTRATO_EMPRESA
-						if(dados.resultado.empresa_id === EMPRESA_ADMINISTRACAO_ID){
-							tela = TELA_EXTRATO_ADMINISTRACAO
-						}
+						const tela = TELA_EXTRATO_ADMINISTRACAO
 						this.props.salvarUsuarioLogado(dados.resultado)
 						this.props.alterarTela(tela)
 					}

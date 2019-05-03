@@ -21,7 +21,6 @@ class CategoriaSalvar extends React.Component {
 	state = {
 		nome: '',
 		credito_debito: 0,
-		categoria_tipo_id: 0,
 		mostrarMensagemDeErro: false,
 		camposComErro: [],
 	}
@@ -36,7 +35,6 @@ class CategoriaSalvar extends React.Component {
 		const {
 			nome,
 			credito_debito,
-			categoria_tipo_id,
 		} = this.state
 		let {
 			mostrarMensagemDeErro,
@@ -57,10 +55,6 @@ class CategoriaSalvar extends React.Component {
 			mostrarMensagemDeErro = true
 			camposComErro.push('credito_debito')
 		}
-		if(parseInt(categoria_tipo_id) === 0){
-			mostrarMensagemDeErro = true
-			camposComErro.push('categoria_tipo_id')
-		}
 
 		if(mostrarMensagemDeErro){
 			this.setState({
@@ -76,7 +70,6 @@ class CategoriaSalvar extends React.Component {
 			const elemento = {}
 			elemento.credito_debito = credito_debito
 			elemento.nome = nome
-			elemento.categoria_tipo_id = categoria_tipo_id
 			this.props.salvarCategoriaNaApi(elemento, usuarioLogado.token)
 			this.props.alternarMostrarAdicionar()
 			alert('Categoria Salva com sucesso!')
@@ -87,13 +80,9 @@ class CategoriaSalvar extends React.Component {
 		const {
 			nome,
 			credito_debito,
-			categoria_tipo_id,
 			mostrarMensagemDeErro,
 			camposComErro,
 		} = this.state
-		const {
-			categoriaTipo,
-		} = this.props
 		return (
 			<div>
 				<Cabecalho 
@@ -127,33 +116,7 @@ class CategoriaSalvar extends React.Component {
 					<option value='D'>{STRING_DEBITO}</option>
 				</Input>
 			{camposComErro.includes('credito_debito') && <Alert color='danger'>Selecione se é Receita ou Despesa</Alert>}
-			</FormGroup>
-			<FormGroup>
-				<Label for="categoria_tipo_id">Categoria Tipo</Label>
-				<Input 
-					type="select" 
-					name="categoria_tipo_id" 
-					id="categoria_tipo_id" 
-					value={categoria_tipo_id} 
-					onChange={this.ajudadorDeCampo}
-				>
-					<option value='0'>Selecione</option>
-					{
-						categoriaTipo &&
-							categoriaTipo.map(categoriaTipo => {
-								return (
-									<option 
-										key={categoriaTipo._id}
-										value={categoriaTipo._id}
-									>
-										{categoriaTipo.nome}
-									</option>
-								)
-							})
-					}
-				</Input>
-			</FormGroup>
-			{camposComErro.includes('categoria_tipo_id') && <Alert color='danger'>Selecione o Tipo da Categoria</Alert>}
+		</FormGroup>
 		{
 			mostrarMensagemDeErro &&
 				<div style={{padding: 10}}>
@@ -185,10 +148,9 @@ class CategoriaSalvar extends React.Component {
 	}
 }
 
-function mapStateToProps({usuarioLogado, categoriaTipo}){
+function mapStateToProps({usuarioLogado,}){
 	return {
 		usuarioLogado,
-		categoriaTipo,
 	}
 }
 

@@ -33,8 +33,22 @@ class ExtratoAdministracao extends React.Component {
 	}
 
 	componentDidMount() {
-		this.atualizar()
+		this.logando()
+			.then(() => this.props.puxarRestanteDoDados())
 		this.props.askForPermissioToReceiveNotifications()
+	}
+	
+	logando = async () => {
+		this.setState({
+			carregando: true,
+		})
+		this.props.puxarCategoriaELancamentos()
+			.then(() => {
+				this.setState({
+					carregando: false,
+				})
+			})
+		return true
 	}
 
 	atualizar = () => {

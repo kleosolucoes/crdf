@@ -38,6 +38,7 @@ class Lancamentos extends React.Component {
 		mostrarAlterarLancamento: false,
 		lancamento_id: null,
 		carregando: false,
+		efetivado: 0,
 	}
 
 	atualizar = () => {
@@ -82,6 +83,7 @@ class Lancamentos extends React.Component {
 			mostrarAlterarLancamento,
 			lancamento_id,
 			carregando,
+			efetivado,
 		} = this.state
 		let categoriasFiltradas = categorias
 		let lancamentosFiltrados = lancamentos
@@ -92,6 +94,20 @@ class Lancamentos extends React.Component {
 		if (empresa_id && parseInt(empresa_id) !== 0) {
 			lancamentosFiltrados = lancamentosFiltrados
 				.filter(lancamento => lancamento.empresa_id === empresa_id)
+		}
+		if (efetivado && parseInt(efetivado) !== 0) {
+			const tipoEfetivado = 1
+			const tipoPendente = 2
+			lancamentosFiltrados = lancamentosFiltrados
+				.filter(lancamento => {
+					if(parseInt(efetivado) === tipoEfetivado){
+						return !isNaN(lancamento.recebido) && parseFloat(lancamento.recebido) > 0
+					}
+					if(parseInt(efetivado) === tipoPendente){
+						return !lancamento.recebido || isNaN(lancamento.recebido) || parseFloat(lancamento.recebido) === 0
+					}
+					return true
+				})
 		}
 		if (anoInicial && parseInt(anoInicial) !== 0) {
 			lancamentosFiltrados = lancamentosFiltrados
@@ -108,12 +124,16 @@ class Lancamentos extends React.Component {
 		if (anoFinal && parseInt(anoFinal) !== 0) {
 			lancamentosFiltrados = lancamentosFiltrados
 				.filter(lancamento => parseInt(lancamento.data.split('/')[2]) <= parseInt(anoFinal))
-			if (mesFinal && parseInt(mesFinal) !== 0) {
-				lancamentosFiltrados = lancamentosFiltrados
-					.filter(lancamento => parseInt(lancamento.data.split('/')[1]) <= parseInt(mesFinal))
-				if (diaFinal && parseInt(diaFinal) !== 0) {
+			if(parseInt(anoFinal) === parseInt(anoInicial)){
+				if (mesFinal && parseInt(mesFinal) !== 0) {
 					lancamentosFiltrados = lancamentosFiltrados
-						.filter(lancamento => parseInt(lancamento.data.split('/')[0]) <= parseInt(diaFinal))
+						.filter(lancamento => parseInt(lancamento.data.split('/')[1]) <= parseInt(mesFinal))
+					if(parseInt(mesFinal) === parseInt(mesInicial)){
+						if (diaFinal && parseInt(diaFinal) !== 0) {
+							lancamentosFiltrados = lancamentosFiltrados
+								.filter(lancamento => parseInt(lancamento.data.split('/')[0]) <= parseInt(diaFinal))
+						}
+					}
 				}
 			}
 		}
@@ -130,6 +150,33 @@ class Lancamentos extends React.Component {
 		const anoAtual = new Date().getFullYear()
 		for (let indiceAno = 2019; indiceAno <= anoAtual; indiceAno++) {
 			arrayAnos.push(<option key={indiceAno} value={indiceAno}>{indiceAno}</option>)
+		}
+		let lancamentoFinal = {
+			dizimo: 0,
+			oferta: 0,
+			recebido: 0,
+		}
+		lancamentosFiltrados
+			.forEach(lancamento => {
+				if(!isNaN(lancamento.dizimo)){
+					lancamentoFinal.dizimo += lancamento.dizimo
+				}
+				if(!isNaN(lancamento.oferta)){
+					lancamentoFinal.oferta += lancamento.oferta
+				}
+				if(!isNaN(lancamento.recebido)){
+					lancamentoFinal.recebido += lancamento.recebido
+				}
+			})
+		const somaFinal = lancamentoFinal.dizimo + lancamentoFinal.oferta
+		let diferencaFinal = null
+		if (lancamentoFinal.recebido) {
+			diferencaFinal = lancamentoFinal.recebido - somaFinal
+		}
+
+		let colspanFinal = 2
+		if(empresa_usuario_logado_id === EMPRESA_ADMINISTRACAO_ID){
+			colspanFinal = 3
 		}
 
 		return (
@@ -220,6 +267,26 @@ class Lancamentos extends React.Component {
 									</FormGroup>
 								</Col>
 							</Row>
+
+							<Row>
+								<Col>
+									<FormGroup>
+										<Label for="efetivado">Efetivado</Label>
+										<Input
+											type="select"
+											name="efetivado"
+											id="efetivado"
+											value={efetivado}
+											onChange={this.ajudadorDeCampo}
+										>
+											<option value='0'>Todas</option>
+											<option value='1'>Efetivado</option>
+											<option value='2'>Pendente</option>
+										</Input>
+									</FormGroup>
+								</Col>
+							</Row>
+						
 							
 							<Row>
 								<Col sm="6">
@@ -357,7 +424,7 @@ class Lancamentos extends React.Component {
 										<th> Dízimos </th>
 										<th> Oferta </th>
 										<th> Soma </th>
-										<th> Recebido </th>
+										<th> Efetivado </th>
 										<th> Diferença </th>
 										<th> Opções </th>
 									</tr>
@@ -374,6 +441,15 @@ class Lancamentos extends React.Component {
 											)
 										})
 									}
+									<tr className='text-right' style={{backgroundColor: '#333', color: '#FFF'}}>
+										<td colspan={colspanFinal}> Total </td>
+										<td> R$ {Number(lancamentoFinal.dizimo).toFixed(2)} </td>
+										<td> R$ {Number(lancamentoFinal.oferta).toFixed(2)} </td>
+										<td> R$ {Number(somaFinal).toFixed(2)} </td>
+										<td> R$ {Number(lancamentoFinal.recebido).toFixed(2)} </td>
+										<td> R$ {Number(diferencaFinal).toFixed(2)} </td>
+										<td></td>
+									</tr>	
 								</tbody>
 							</table>
 						}
@@ -390,7 +466,7 @@ const mapStateToProps = (state, { empresa_id }) => {
 
 	let lancamentos = state.lancamentos
 	/* Tela de extrato da empresa */
-	if (usuarioLogado.empresa_id !== EMPRESA_ADMINISTRACAO_ID) {
+	if (usuarioLogado && usuarioLogado.empresa_id !== EMPRESA_ADMINISTRACAO_ID) {
 		lancamentos = state.lancamentos.filter(lancamento => lancamento.empresa_id === usuarioLogado.empresa_id)
 	}
 	return {

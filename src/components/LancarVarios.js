@@ -108,6 +108,7 @@ class LancarVarios extends React.Component {
 				elemento.ano = ano
 				elemento.usuario_id = usuarioLogado.usuario_id
 				elemento.empresa_id = usuarioLogado.empresa_id
+				elemento.recebido = null
 
 				if(indiceLancamento === 1){
 					if(parseInt(dinheiroDizimo) !== 0 || parseInt(dinheiroOferta) !== 0){
@@ -144,7 +145,7 @@ class LancarVarios extends React.Component {
 			}
 			lancarVariosNaApi(elementos, usuarioLogado.token)
 			alert('Lancamento(s) Salvo(s) com sucesso!')
-			this.props.alterarTela('extratoEmpresa')
+			this.props.alterarTela('extratoAdministracao')
 		}
 	}
 

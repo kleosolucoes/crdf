@@ -18,7 +18,6 @@ import {
 } from './actions'
 import {
 	TELA_EXTRATO_ADMINISTRACAO,
-	TELA_EXTRATO_EMPRESA,
 } from './helpers/constantes'
 import { 
 	pegarUsuarioDaApi,
@@ -52,6 +51,19 @@ class App extends React.Component {
 			token: null,
 		})
 		this.alterarTela('login')
+	}
+
+	puxarCategoriaELancamentos = () => {
+		this.props.pegarCategoriaDaApi(this.props.token)
+		return this.props.pegarLancamentoDaApi(this.props.token)
+	}
+
+	puxarRestanteDoDados = () => {
+		this.props.pegarUsuarioDaApi(this.props.token)			
+		this.props.pegarUsuarioTipoDaApi(this.props.token)
+		this.props.pegarEmpresaDaApi(this.props.token)
+		this.props.pegarEmpresaTipoDaApi(this.props.token)
+		this.props.pegarContaFixaDaApi(this.props.token)
 	}
 
 	puxarTodosDados = () => {
@@ -98,14 +110,6 @@ class App extends React.Component {
 							/>
 					}
 					{
-						tela === TELA_EXTRATO_EMPRESA &&
-							<ExtratoAdministracao 
-								alterarTela={this.alterarTela}
-								puxarTodosDados={this.puxarTodosDados}
-								askForPermissioToReceiveNotifications={this.askForPermissioToReceiveNotifications}
-							/>
-					}
-					{
 						tela === 'lancarVarios' &&
 							<LancarVarios
 								alterarTela={this.alterarTela}
@@ -121,6 +125,8 @@ class App extends React.Component {
 						tela === TELA_EXTRATO_ADMINISTRACAO &&
 							<ExtratoAdministracao 
 								alterarTela={this.alterarTela}
+								puxarCategoriaELancamentos={this.puxarCategoriaELancamentos}	
+								puxarRestanteDoDados={this.puxarRestanteDoDados}	
 								puxarTodosDados={this.puxarTodosDados}	
 								askForPermissioToReceiveNotifications={this.askForPermissioToReceiveNotifications}
 							/> 

@@ -337,7 +337,7 @@ class LancarVarios extends React.Component {
 					</FormGroup>
 				</Col>
 
-				<Col>
+				<Col style={{paddingRight: 0, paddingLeft: 0}}>
 					<FormGroup>
 						<Label for="mes">* Mês:</Label>
 						<Input 
